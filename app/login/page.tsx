@@ -12,11 +12,11 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault(); // ← منع الـ default form submit
+    e.preventDefault();
     setLoading(true);
     setError(null);
 
-    const formData = new FormData(e.currentTarget); // ← جيب الـ data من الـ form
+    const formData = new FormData(e.currentTarget);
     const result = await signIn(formData);
 
     if (result?.error) {
@@ -26,7 +26,6 @@ export default function LoginPage() {
       );
       setLoading(false);
     }
-    // لو نجح → الـ signIn هيعمل redirect تلقائي
   }
 
   return (

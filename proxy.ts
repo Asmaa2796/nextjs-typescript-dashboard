@@ -26,17 +26,14 @@ export async function proxy(request: NextRequest) {
     }
   );
 
-  // جيب الـ session — لازم السطر ده يتعمل عشان الـ cookies تتجدد
   const { data: { user } } = await supabase.auth.getUser();
 
   const { pathname } = request.nextUrl;
 
-  // لو مش logged in وبيحاول يدخل أي حاجة غير /login → روّحه للـ login
   if (!user && pathname !== "/login") {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
-  // لو logged in وعلى /login → روّحه للـ dashboard
   if (user && pathname === "/login") {
     return NextResponse.redirect(new URL("/", request.url));
   }
@@ -46,7 +43,6 @@ export async function proxy(request: NextRequest) {
 
 export const config = {
   matcher: [
-    // حمي كل الصفحات ما عدا الـ static files والـ api
     "/((?!_next/static|_next/image|favicon.ico|assets|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
   ],
 };
