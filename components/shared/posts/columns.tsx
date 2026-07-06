@@ -25,6 +25,12 @@ export type Post = {
   content: string | null;
   sub_content: string | null;
   active: boolean | null;
+  category_id: number | null;
+  category_name: string | null;
+  category: {
+    id: number;
+    name: string | null;
+  } | null;
   created_at: string;
 };
 
@@ -165,6 +171,24 @@ export const columns: ColumnDef<Post>[] = [
     },
   },
   {
+    id: "category",
+    header: "Category",
+    cell: ({ row }) => {
+      const category =
+        row.original.category_name ??
+        row.original.category?.name;
+
+      return (
+        <Badge
+          variant="outline"
+          className="border-indigo-400 bg-indigo-50 text-indigo-400"
+        >
+          {category ?? "No Category"}
+        </Badge>
+      );
+    },
+  },
+  {
     accessorKey: "active",
     header: "Status",
     cell: ({ row }) => (
@@ -199,7 +223,7 @@ export const columns: ColumnDef<Post>[] = [
               <TooltipTrigger className="cursor-pointer inline-flex items-center justify-center h-8 w-8 rounded-md border border-border hover:bg-muted">
                 <span className="text-center">
                   <Link href={`/posts/show/${post.id}`}>
-                    <Eye className="h-4 w-4 text-indigo-400" />
+                    <Eye className="h-4 w-4 text-blue-400" />
                   </Link>
                 </span>
               </TooltipTrigger>

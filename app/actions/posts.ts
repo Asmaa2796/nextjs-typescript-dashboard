@@ -11,6 +11,9 @@ export async function createPost(formData: FormData) {
   const active = formData.get("active") === "true";
   const mainImageFile = formData.get("main_image") as File;
   const subImageFiles = formData.getAll("sub_images") as File[];
+  const categoryId = formData.get("category_id");
+  const categoryName = formData.get("category_name") as string | null;
+  const tagIds = formData.getAll("tag_ids");
 
   // Upload main image
   let main_image = "";
@@ -43,18 +46,62 @@ export async function createPost(formData: FormData) {
     sub_images.push(urlData.publicUrl);
   }
 
-  const { error } = await supabase.from("posts").insert({
+  const insertPayload: Record<string, unknown> = {
     title,
     content,
     sub_content,
     active,
     main_image,
     sub_images,
-  });
+    category_id: categoryId && categoryId !== "" ? Number(categoryId) : null,
+  };
 
-  if (error) throw new Error(error.message);
+  if (categoryName && categoryName !== "") {
+    insertPayload.category_name = categoryName;
+  }
+
+  let { data: newPost, error } = await supabase
+    .from("posts")
+    .insert(insertPayload)
+    .select()
+    .single();
+
+  if (error?.message?.includes("does not exist") && insertPayload.category_name) {
+    const fallbackPayload = { ...insertPayload };
+    delete fallbackPayload.category_name;
+    ({ data: newPost, error } = await supabase
+      .from("posts")
+      .insert(fallbackPayload)
+      .select()
+      .single());
+  }
+
+  if (error || !newPost) {
+    console.error("Error creating post in DB:", error);
+    throw new Error(error?.message || "Failed to create post row");
+  }
+
+  if (newPost && tagIds.length > 0) {
+    const postTagRows = tagIds
+      .filter((tagId) => tagId !== "")
+      .map((tagId) => ({
+        post_id: newPost.id,
+        tag_id: Number(tagId),
+      }));
+
+    if (postTagRows.length > 0) {
+      const { error: tagsError } = await supabase
+        .from("post_tags")
+        .insert(postTagRows);
+
+      if (tagsError) {
+        console.error("Error linking tags to post:", tagsError);
+      }
+    }
+  }
 
   revalidatePath("/posts");
+  return { success: true, post_id: newPost.id };
 }
 
 // update post

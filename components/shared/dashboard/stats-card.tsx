@@ -16,7 +16,7 @@ export function StatsCard({
   iconBgClass,
 }: Props) {
   return (
-    <div className="rounded-2xl border border-gray-200 bg-white px-6 pb-5 pt-6 dark:border-gray-800 dark:bg-white/[0.03]">
+    <div className="rounded-2xl border border-gray-200 bg-white px-6 pb-5 pt-6 dark:border-gray-800 dark:bg-[#102A3D]">
       <div className="mb-4 flex items-center gap-3">
         <div
           className={`flex h-11 w-11 items-center justify-center rounded-full ${iconBgClass} ${iconColorClass}`}

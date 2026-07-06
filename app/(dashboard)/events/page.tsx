@@ -7,7 +7,7 @@ export default async function EventsPage() {
   return (
     <div className="p-6">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-medium">Events Calendar</h1>
+        <h1 className="text-2xl font-medium text-slate-800">Events Calendar</h1>
       </div>
       <EventsCalendar events={events} />
     </div>
