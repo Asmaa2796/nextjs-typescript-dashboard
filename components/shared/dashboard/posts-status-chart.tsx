@@ -46,7 +46,7 @@ export function PostsStatusChart({ stats }: Props) {
   const series = [stats.activePercentage]
 
   return (
-    <div className="max-w-xl w-full rounded-xl border bg-white dark:bg-[#102A3D] p-4 md:p-6">
+    <div className="max-w-xl w-full rounded-xl border bg-white dark:bg-[#09161f] p-4 md:p-6">
       <div className="flex items-center justify-between mb-4 md:mb-6">
         <h5 className="text-xl font-semibold text-slate-600">Posts status</h5>
       </div>

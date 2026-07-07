@@ -100,7 +100,7 @@ export function EventsCalendar({ events }: { events: Event[] }) {
   return (
     <>
       <div className="flex items-center justify-between mb-4">
-        <Button size="sm" onClick={() => setModal("add")} className="cursor-pointer">
+        <Button size="sm" onClick={() => setModal("add")} className="cursor-pointer dark:bg-[#09161f] dark:text-sky-600">
           Add Event
           <Plus className="w-4 h-4 mr-1" />
         </Button>
@@ -137,7 +137,7 @@ export function EventsCalendar({ events }: { events: Event[] }) {
         ))}
       </div>
 
-      <div className="grid grid-cols-7 border-t border-l border-border bg-white">
+      <div className="grid grid-cols-7 border-t border-l border-border bg-white dark:bg-[#09161f]">
         {cells.map((day, i) => {
           const dayEvents = day ? eventsForDay(day) : []
 

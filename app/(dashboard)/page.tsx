@@ -52,7 +52,7 @@ export default async function DashboardPage() {
 
       <div>
         <div className="grid gap-5 md:grid-cols-2 mb-8">
-          <div className="rounded-xl border bg-white dark:bg-[#102A3D] p-6">
+          <div className="rounded-xl border bg-white dark:bg-[#09161f] p-6">
             <div className="flex items-center justify-between mb-4">
               <div>
                 <p className="text-sm text-muted-foreground">Events created</p>
@@ -75,7 +75,7 @@ export default async function DashboardPage() {
           </div>
         </div>
         <div>
-          <div className="rounded-xl border bg-white dark:bg-gray-950 p-6">
+          <div className="rounded-xl border bg-white dark:bg-[#09161f] p-6">
             <div className="mb-4">
               <p className="text-sm text-muted-foreground">Events by time of day</p>
               <h3 className="text-lg font-semibold text-slate-600 my-2">Last 7 days</h3>

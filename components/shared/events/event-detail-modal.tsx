@@ -37,7 +37,7 @@ export function EventDetailModal({
 
     return (
         <Dialog open={open} onOpenChange={onClose}>
-            <DialogContent className="sm:max-w-md">
+            <DialogContent className="sm:max-w-md dark:bg-[#09161f]">
 
                 <DialogHeader>
                     <div className="flex items-center gap-3">
@@ -101,7 +101,7 @@ export function EventDetailModal({
                         <Button
                             variant="ghost"
                             size="sm"
-                            className="text-destructive hover:text-destructive cursor-pointer"
+                            className="text-destructive hover:text-destructive cursor-pointer dark:border-input dark:bg-input/30"
                             onClick={onDelete}
                         >
                             <Trash2 className="w-4 h-4 ml-1" /> Delete

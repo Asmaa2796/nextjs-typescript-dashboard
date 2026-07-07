@@ -58,7 +58,7 @@ export function DataTable<TData, TValue>({
   });
 
   return (
-    <div className="rounded-md border bg-white dark:bg-[#102A3D]">
+    <div className="rounded-md border bg-white dark:bg-[#09161f]">
       <div className="p-4">
         <Input
           placeholder="Search title..."
@@ -77,7 +77,7 @@ export function DataTable<TData, TValue>({
       </div>
 
       <Table>
-        <TableHeader className="bg-gray-50 dark:bg-[#102A3D]">
+        <TableHeader className="bg-gray-50 dark:bg-[#09161f]">
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
               {headerGroup.headers.map((header) => (

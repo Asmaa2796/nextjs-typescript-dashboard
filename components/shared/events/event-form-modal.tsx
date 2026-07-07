@@ -90,7 +90,7 @@ export default function EventFormModal({ open, event, onclose }: props) {
     }
     return (
         <Dialog open={open} onOpenChange={handleClose}>
-            <DialogContent className="sm:max-w-lg max-h-[90vh] p-0 flex flex-col overflow-hidden">
+            <DialogContent className="sm:max-w-lg max-h-[90vh] p-0 flex flex-col overflow-hidden dark:bg-[#09161f]">
                 <DialogHeader className="px-5 py-4 border-b shrink-0">
                     <DialogTitle>
                         {isEditMode ? "Edit Event" : "Add New Event"}
@@ -107,7 +107,7 @@ export default function EventFormModal({ open, event, onclose }: props) {
                                 <input
                                     {...register("name")}
                                     className="w-full mt-1 border rounded-md px-3 py-2 text-sm
-                     bg-background focus:outline-none focus:ring-1
+                     bg-background dark:bg-gray-950 focus:outline-none focus:ring-1
                      focus:ring-ring"
                                     placeholder="Example: Team Meeting"
                                 />
@@ -125,7 +125,7 @@ export default function EventFormModal({ open, event, onclose }: props) {
                                 <input
                                     {...register("location")}
                                     className="w-full mt-1 border rounded-md px-3 py-2 text-sm
-                     bg-background focus:outline-none focus:ring-1
+                     bg-background dark:bg-gray-950 focus:outline-none focus:ring-1
                      focus:ring-ring"
                                     placeholder="Example: Egypt,Cairo"
                                 />
@@ -145,7 +145,7 @@ export default function EventFormModal({ open, event, onclose }: props) {
                                     type="date"
                                     {...register("date_from")}
                                     className="w-full mt-1 border rounded-md px-3 py-2 text-sm
-                       bg-background focus:outline-none focus:ring-1
+                       bg-background dark:bg-gray-950 focus:outline-none focus:ring-1
                        focus:ring-ring"
                                 />
                                 {errors.date_from && (
@@ -161,7 +161,7 @@ export default function EventFormModal({ open, event, onclose }: props) {
                                     type="date"
                                     {...register("date_to")}
                                     className="w-full mt-1 border rounded-md px-3 py-2 text-sm
-                       bg-background focus:outline-none focus:ring-1
+                       bg-background dark:bg-gray-950 focus:outline-none focus:ring-1
                        focus:ring-ring"
                                 />
                                 {errors.date_to && (
@@ -180,7 +180,7 @@ export default function EventFormModal({ open, event, onclose }: props) {
                                     type="time"
                                     {...register("time_from")}
                                     className="w-full mt-1 border rounded-md px-3 py-2 text-sm
-                       bg-background focus:outline-none focus:ring-1
+                       bg-background dark:bg-gray-950 focus:outline-none focus:ring-1
                        focus:ring-ring"
                                 />
                                 {errors.time_from && (
@@ -196,7 +196,7 @@ export default function EventFormModal({ open, event, onclose }: props) {
                                     type="time"
                                     {...register("time_to")}
                                     className="w-full mt-1 border rounded-md px-3 py-2 text-sm
-                       bg-background focus:outline-none focus:ring-1
+                       bg-background dark:bg-gray-950 focus:outline-none focus:ring-1
                        focus:ring-ring"
                                 />
                                 {errors.time_to && (
@@ -217,7 +217,7 @@ export default function EventFormModal({ open, event, onclose }: props) {
                                 <input
                                     {...register("phone")}
                                     className="w-full mt-1 border rounded-md px-3 py-2 text-sm
-                       bg-background focus:outline-none focus:ring-1
+                       bg-background dark:bg-gray-950 focus:outline-none focus:ring-1
                        focus:ring-ring"
                                     placeholder="01xxxxxxxxx"
                                 />
@@ -236,7 +236,7 @@ export default function EventFormModal({ open, event, onclose }: props) {
                                     type="email"
                                     {...register("email")}
                                     className="w-full mt-1 border rounded-md px-3 py-2 text-sm
-                       bg-background focus:outline-none focus:ring-1
+                       bg-background dark:bg-gray-950 focus:outline-none focus:ring-1
                        focus:ring-ring"
                                     placeholder="example@email.com"
                                 />
@@ -284,7 +284,7 @@ export default function EventFormModal({ open, event, onclose }: props) {
 
 
                     {/* Buttons */}
-                    <div className="border-t px-5 py-4 flex justify-end gap-2 shrink-0 bg-background">
+                    <div className="border-t px-5 py-4 flex justify-end gap-2 shrink-0 bg-background dark:bg-gray-950">
                         <Button className="cursor-pointer" type="button" variant="outline" onClick={handleClose}>
                             Cancel
                         </Button>
