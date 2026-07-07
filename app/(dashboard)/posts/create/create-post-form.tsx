@@ -13,7 +13,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { RichTextEditor } from "@/components/shared/posts/rich-text-editor";
 import { Pattern as GalleryUpload } from "@/components/shared/posts/gallery-upload";
 import { useFileUpload } from "@/hooks/use-file-upload";
@@ -226,23 +225,26 @@ export default function CreatePostPage({ categories, tags }: CreatePostPageProps
           )}
         </div>
         <div className="space-y-1">
-          <Label className="my-2">Category<sup className="text-red-600">*</sup></Label>
+          <Label className="my-2" htmlFor="category_id">
+            Category<sup className="text-red-600">*</sup>
+          </Label>
           <Controller
             name="category_id"
             control={control}
             render={({ field }) => (
-              <Select onValueChange={field.onChange} value={field.value}>
-                <SelectTrigger className="bg-white h-10 w-full">
-                  <SelectValue placeholder="Select a category" />
-                </SelectTrigger>
-                <SelectContent>
-                  {categories.map((category) => (
-                    <SelectItem key={category.id} value={category.id.toString()}>
-                      {category.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <select
+                id="category_id"
+                value={field.value}
+                onChange={(event) => field.onChange(event.target.value)}
+                className="block w-full px-3 py-2.5 bg-white border border-border text-foreground text-sm rounded-md shadow-sm focus:border-ring focus:ring-2 focus:ring-ring"
+              >
+                <option value="">Choose a category</option>
+                {categories.map((category) => (
+                  <option key={category.id} value={category.id.toString()}>
+                    {category.name}
+                  </option>
+                ))}
+              </select>
             )}
           />
           {errors.category_id && (

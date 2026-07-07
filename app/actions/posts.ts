@@ -115,6 +115,8 @@ export async function updatePost(formData: FormData) {
   const subImageFiles = formData.getAll("sub_images") as File[];
   const existingMainImage = formData.get("existing_main_image") as string;
   const existingSubImages = formData.getAll("existing_sub_images") as string[];
+  const categoryId = formData.get("category_id");
+  const tagIds = formData.getAll("tag_ids");
 
   let main_image = existingMainImage;
   if (mainImageFile && mainImageFile.size > 0) {
@@ -145,12 +147,50 @@ export async function updatePost(formData: FormData) {
     sub_images.push(urlData.publicUrl);
   }
 
+  const updatePayload: Record<string, unknown> = {
+    title,
+    content,
+    sub_content,
+    active,
+    main_image,
+    sub_images,
+  };
+
+  if (categoryId && categoryId !== "") {
+    updatePayload.category_id = Number(categoryId);
+  }
+
   const { error } = await supabase
     .from("posts")
-    .update({ title, content, sub_content, active, main_image, sub_images })
+    .update(updatePayload)
     .eq("id", id);
 
   if (error) throw new Error(error.message);
+
+  // Update tags
+  if (tagIds.length > 0) {
+    // Delete existing tags for this post
+    await supabase.from("post_tags").delete().eq("post_id", id);
+
+    // Insert new tags
+    const postTagRows = tagIds
+      .filter((tagId) => tagId !== "")
+      .map((tagId) => ({
+        post_id: id,
+        tag_id: Number(tagId),
+      }));
+
+    if (postTagRows.length > 0) {
+      const { error: tagsError } = await supabase
+        .from("post_tags")
+        .insert(postTagRows);
+
+      if (tagsError) {
+        console.error("Error updating tags for post:", tagsError);
+      }
+    }
+  }
+
   revalidatePath("/posts");
   revalidatePath(`/posts/${id}`);
 }

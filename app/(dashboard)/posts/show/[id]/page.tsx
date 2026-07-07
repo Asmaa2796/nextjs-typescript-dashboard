@@ -23,8 +23,16 @@ export default async function ShowPostPage({ params }: Props) {
 
   if (error || !post) notFound();
 
+  // Fetch post tags
+  const { data: postTags } = await supabase
+    .from("post_tags")
+    .select("tags(id, name)")
+    .eq("post_id", id);
+
+  const tags = postTags?.map((pt: any) => pt.tags).filter(Boolean) || [];
+
   return (
-    <div className="max-w-5xl mx-auto py-8 px-4 bg-white rounded-lg shadow">
+    <div className="max-w-5xl mx-auto py-8 px-4 bg-white rounded-lg dark:bg-[#09161f] shadow">
 
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
@@ -66,6 +74,28 @@ export default async function ShowPostPage({ params }: Props) {
         >
           {post.active ? "Active" : "Inactive"}
         </Badge>
+      </div>
+
+      {/* Category and Tags */}
+      <div className="mb-6 flex flex-wrap items-center gap-4">
+        {post.category_id && (
+          <div>
+            <span className="text-muted-foreground text-sm mr-2">Category:</span>
+            <Badge variant="secondary">{post.category_name || "Uncategorized"}</Badge>
+          </div>
+        )}
+        {tags.length > 0 && (
+          <div className="flex items-center gap-2">
+            <span className="text-muted-foreground text-sm">Tags:</span>
+            <div className="flex flex-wrap gap-2">
+              {tags.map((tag: any) => (
+                <Badge key={tag.id} variant="outline" className="text-xs">
+                  {tag.name}
+                </Badge>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Content */}

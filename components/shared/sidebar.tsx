@@ -12,6 +12,7 @@ import {
   PanelLeftOpen,
   PanelRightOpen,
   LogOut,
+  LayoutList
 } from "lucide-react";
 
 import {
@@ -35,6 +36,7 @@ const menuItems = [
       { title: "View Posts", href: "/posts", icon: List },
     ],
   },
+  { title: "Categories", href: "/categories", icon: LayoutList },
   { title: "Events", href: "/events", icon: Events },
   { title: "Users", href: "/users", icon: Users },
   { title: "Settings", href: "/settings", icon: Settings },

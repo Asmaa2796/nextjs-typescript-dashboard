@@ -19,5 +19,28 @@ export default async function EditPostPage({ params }: Props) {
 
   if (error || !post) notFound();
 
-  return <EditPostForm post={post} />;
+  // Fetch categories
+  const { data: categories } = await supabase
+    .from("categories")
+    .select("id, name");
+
+  // Fetch tags
+  const { data: tags } = await supabase
+    .from("tags")
+    .select("id, name");
+
+  // Fetch post tags
+  const { data: postTags } = await supabase
+    .from("post_tags")
+    .select("tag_id")
+    .eq("post_id", id);
+
+  return (
+    <EditPostForm
+      post={post}
+      categories={categories || []}
+      tags={tags || []}
+      selectedTagIds={postTags?.map((pt) => pt.tag_id.toString()) || []}
+    />
+  );
 }

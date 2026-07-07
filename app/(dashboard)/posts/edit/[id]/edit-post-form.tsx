@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
+import { Badge } from "@/components/ui/badge";
 import { RichTextEditor } from "@/components/shared/posts/rich-text-editor";
 import { Pattern as GalleryUpload } from "@/components/shared/posts/gallery-upload";
 import { useFileUpload } from "@/hooks/use-file-upload";
@@ -26,6 +27,7 @@ interface Post {
   active: boolean;
   main_image: string;
   sub_images: string[];
+  category_id?: number | null;
 }
 
 const MAX_SIZE = 20 * 1024 * 1024;
@@ -36,6 +38,8 @@ const schema = z.object({
   content: z.string().min(1, "Content is required"),
   sub_content: z.string().min(1, "Sub content is required"),
   active: z.boolean(),
+  category_id: z.string().optional(),
+  tag_ids: z.array(z.string()).optional(),
   main_image: z
     .instanceof(File)
     .refine((f) => f.size <= MAX_SIZE, "Max file size is 20MB")
@@ -118,7 +122,17 @@ function MainImagePicker({
   );
 }
 
-export function EditPostForm({ post }: { post: Post }) {
+export function EditPostForm({
+  post,
+  categories = [],
+  tags = [],
+  selectedTagIds = [],
+}: {
+  post: Post;
+  categories: { id: number; name: string }[];
+  tags: { id: number; name: string }[];
+  selectedTagIds: string[];
+}) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [removedSubImages, setRemovedSubImages] = useState<string[]>([]);
@@ -128,11 +142,28 @@ export function EditPostForm({ post }: { post: Post }) {
     register,
     handleSubmit,
     setValue,
+    watch,
     formState: { errors },
   } = useForm<FormValues>({
     resolver: zodResolver(schema),
-    defaultValues: { active: post.active },
+    defaultValues: {
+      active: post.active,
+      category_id: post.category_id?.toString() || "",
+      tag_ids: selectedTagIds,
+    },
   });
+
+  const selectedTags = watch("tag_ids") || [];
+  const toggleTag = (tagId: string) => {
+    const current = [...selectedTags];
+    const index = current.indexOf(tagId);
+    if (index > -1) {
+      current.splice(index, 1);
+    } else {
+      current.push(tagId);
+    }
+    setValue("tag_ids", current, { shouldValidate: true });
+  };
 
   const remainingSubImages = post.sub_images.filter(
     (url) => !removedSubImages.includes(url)
@@ -147,6 +178,12 @@ export function EditPostForm({ post }: { post: Post }) {
       formData.append("content", data.content);
       formData.append("sub_content", data.sub_content);
       formData.append("active", String(data.active));
+
+      if (data.category_id) {
+        formData.append("category_id", data.category_id);
+      }
+
+      data.tag_ids?.forEach((id) => formData.append("tag_ids", id));
 
       if (data.main_image) {
         formData.append("main_image", data.main_image);
@@ -233,6 +270,58 @@ export function EditPostForm({ post }: { post: Post }) {
           />
           {errors.sub_content && (
             <p className="text-destructive text-xs">{errors.sub_content.message}</p>
+          )}
+        </div>
+
+        {/* Category */}
+        <div className="space-y-1">
+          <Label className="my-2" htmlFor="category_id">
+            Category
+          </Label>
+          <Controller
+            name="category_id"
+            control={control}
+            render={({ field }) => (
+              <select
+                id="category_id"
+                value={field.value || ""}
+                onChange={(event) => field.onChange(event.target.value)}
+                className="block w-full px-3 py-2.5 bg-white border border-border text-foreground text-sm rounded-md shadow-sm focus:border-ring focus:ring-2 focus:ring-ring"
+              >
+                <option value="">Choose a category</option>
+                {categories.map((category) => (
+                  <option key={category.id} value={category.id.toString()}>
+                    {category.name}
+                  </option>
+                ))}
+              </select>
+            )}
+          />
+          {errors.category_id && (
+            <p className="text-destructive text-xs">{errors.category_id.message}</p>
+          )}
+        </div>
+
+        {/* Tags / Keywords */}
+        <div className="space-y-1">
+          <Label className="my-2">Tags / Keywords</Label>
+          <div className="flex flex-wrap gap-2 p-3 border rounded-md bg-white">
+            {tags.map((tag) => {
+              const isSelected = selectedTags.includes(tag.id.toString());
+              return (
+                <Badge
+                  key={tag.id}
+                  variant={isSelected ? "default" : "outline"}
+                  className="cursor-pointer text-xs py-1 px-3 select-none"
+                  onClick={() => toggleTag(tag.id.toString())}
+                >
+                  {tag.name} {isSelected && " ✓"}
+                </Badge>
+              );
+            })}
+          </div>
+          {errors.tag_ids && (
+            <p className="text-destructive text-xs">{errors.tag_ids.message}</p>
           )}
         </div>
 
