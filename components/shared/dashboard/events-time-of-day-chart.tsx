@@ -54,12 +54,12 @@ export function EventsTimeOfDayChart({ data }: Props) {
       gradient: { opacityFrom: 0.4, opacityTo: 0.6 },
     },
     legend: { position: "top", horizontalAlign: "left" },
-     grid: {
-    padding: {
-      left: 5,
-      right: 0,
+    grid: {
+      padding: {
+        left: 5,
+        right: 0,
+      },
     },
-  },
     xaxis: {
       type: "category",
       categories,
@@ -69,17 +69,18 @@ export function EventsTimeOfDayChart({ data }: Props) {
       },
     },
     tooltip: {
-  x: {
-    formatter: (_value, opts) => {
-      const index = opts?.dataPointIndex;
-      const dateStr = categories[index];
-      return formatLabel(dateStr);
+      x: {
+        formatter: (_value, opts) => {
+          const index = opts?.dataPointIndex;
+          if (index === undefined) return "";
+          const dateStr = categories[index];
+          return formatLabel(dateStr);
+        },
+      },
+      y: {
+        formatter: (val) => `${val} event${val === 1 ? "" : "s"}`,
+      },
     },
-  },
-  y: {
-    formatter: (val) => `${val} event${val === 1 ? "" : "s"}`,
-  },
-},
   };
 
   return <Chart options={options} series={series} type="area" height={350} />;

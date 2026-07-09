@@ -27,6 +27,7 @@
     "draft-convert": "^2.1.13",
     "draft-js": "^0.11.7",
     "framer-motion": "^12.40.0",
+    "immutable": "^5.1.9",
     "lucide-react": "^1.16.0",
     "next": "16.2.6",
     "next-themes": "^0.4.6",
