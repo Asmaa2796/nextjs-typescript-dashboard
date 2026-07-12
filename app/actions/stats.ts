@@ -41,14 +41,19 @@ export async function getDashboardStats(): Promise<DashboardStats> {
   }
 }
 
+function toUTCDateStr(value: Date | string): string {
+  const d = typeof value === "string" ? new Date(value) : value
+  return d.toISOString().slice(0, 10)
+}
+
 export async function getEventsChartData(): Promise<EventsChartPoint[]> {
 
   const today = new Date()
   const sevenDaysAgo = new Date(today)
-  sevenDaysAgo.setDate(today.getDate() - 6)
+  sevenDaysAgo.setUTCDate(today.getUTCDate() - 6)
 
-  const fromDate = sevenDaysAgo.toISOString().slice(0, 10)
-  const toDate = today.toISOString().slice(0, 10)
+  const fromDate = `${toUTCDateStr(sevenDaysAgo)}T00:00:00.000Z`
+  const toDate = `${toUTCDateStr(today)}T23:59:59.999Z`
 
   const { data, error } = await supabase
     .from("events")
@@ -63,17 +68,18 @@ export async function getEventsChartData(): Promise<EventsChartPoint[]> {
 
   for (let i = 0; i < 7; i++) {
     const d = new Date(sevenDaysAgo)
-    d.setDate(sevenDaysAgo.getDate() + i)
-    const dateStr = d.toISOString().slice(0, 10)
+    d.setUTCDate(sevenDaysAgo.getUTCDate() + i)
+    const dateStr = toUTCDateStr(d)
     buckets.set(dateStr, {
       date: dateStr,
-      label: dayLabels[d.getDay()],
+      label: dayLabels[d.getUTCDay()],
       count: 0,
     })
   }
 
   data?.forEach((row) => {
-    const bucket = buckets.get(row.date_from)
+    const dayKey = toUTCDateStr(row.date_from)
+    const bucket = buckets.get(dayKey)
     if (bucket) bucket.count += 1
   })
 
@@ -111,14 +117,9 @@ export type TimeOfDayChartData = {
 export async function getEventsTimeOfDayChartData(): Promise<
   TimeOfDayChartData[]
 > {
-  const formatDate = (date: Date) =>
-    `${date.getFullYear()}-${String(
-      date.getMonth() + 1
-    ).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
-
   const sevenDaysAgo = new Date();
-  sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 6);
-  const sevenDaysAgoStr = formatDate(sevenDaysAgo);
+  sevenDaysAgo.setUTCDate(sevenDaysAgo.getUTCDate() - 6);
+  const sevenDaysAgoStr = `${toUTCDateStr(sevenDaysAgo)}T00:00:00.000Z`;
 
   const { data, error } = await supabase
     .from("events")
@@ -138,9 +139,9 @@ export async function getEventsTimeOfDayChartData(): Promise<
 
   for (let i = 6; i >= 0; i--) {
     const d = new Date();
-    d.setDate(d.getDate() - i);
+    d.setUTCDate(d.getUTCDate() - i);
 
-    const key = formatDate(d);
+    const key = toUTCDateStr(d);
 
     days[key] = {
       morning: 0,
@@ -150,7 +151,7 @@ export async function getEventsTimeOfDayChartData(): Promise<
   }
 
   data?.forEach((event) => {
-    const dayKey = event.date_from;
+    const dayKey = toUTCDateStr(event.date_from);
 
     if (!days[dayKey]) return;
 
