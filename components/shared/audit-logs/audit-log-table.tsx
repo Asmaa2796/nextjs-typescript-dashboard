@@ -89,7 +89,7 @@ export function AuditLogTable({ data }: AuditLogTableProps) {
         <select
           value={actionFilter}
           onChange={(e) => setActionFilter(e.target.value)}
-          className="px-3 py-2 bg-background text-foreground border border-border dark:bg-[#09161f] text-sm rounded-md shadow-sm focus:border-ring focus:ring-2 focus:ring-ring"
+          className="cursor-pointer px-3 py-2 bg-background text-foreground border border-border dark:bg-[#09161f] text-sm rounded-md shadow-sm focus:border-ring focus:ring-2 focus:ring-ring"
         >
           <option value="all">All actions</option>
           {actionOptions.map((action) => (
@@ -102,7 +102,7 @@ export function AuditLogTable({ data }: AuditLogTableProps) {
         <select
           value={entityFilter}
           onChange={(e) => setEntityFilter(e.target.value)}
-          className="px-3 py-2 bg-background text-foreground dark:bg-[#09161f] border border-border text-sm rounded-md shadow-sm focus:border-ring focus:ring-2 focus:ring-ring"
+          className="cursor-pointer px-3 py-2 bg-background text-foreground dark:bg-[#09161f] border border-border text-sm rounded-md shadow-sm focus:border-ring focus:ring-2 focus:ring-ring"
         >
           <option value="all">All entities</option>
           {entityOptions.map((entity) => (
