@@ -12,7 +12,8 @@ import {
   PanelLeftOpen,
   PanelRightOpen,
   LogOut,
-  LayoutList
+  LayoutList,
+  ClipboardClock
 } from "lucide-react";
 
 import {
@@ -38,7 +39,7 @@ const menuItems = [
   },
   { title: "Categories", href: "/categories", icon: LayoutList },
   { title: "Events", href: "/events", icon: Events },
-  { title: "Users", href: "/users", icon: Users },
+  { title: "Audit Logs", href: "/audit-logs", icon: ClipboardClock },
   { title: "Settings", href: "/settings", icon: Settings },
 ];
 

@@ -2,6 +2,7 @@
 
 import { supabase } from "@/lib/supabase";
 import { revalidatePath } from "next/cache";
+import { logAudit } from "@/lib/audit-log";
 
 // create post
 export async function createPost(formData: FormData) {
@@ -100,6 +101,17 @@ export async function createPost(formData: FormData) {
     }
   }
 
+  await logAudit({
+    action: "post.created",
+    entityType: "post",
+    entityId: newPost.id,
+    metadata: {
+      title: newPost.title,
+      category_id: insertPayload.category_id,
+      active,
+    },
+  });
+
   revalidatePath("/posts");
   return { success: true, post_id: newPost.id };
 }
@@ -117,6 +129,13 @@ export async function updatePost(formData: FormData) {
   const existingSubImages = formData.getAll("existing_sub_images") as string[];
   const categoryId = formData.get("category_id");
   const tagIds = formData.getAll("tag_ids");
+
+  // Fetch the "before" state so we can log a meaningful diff
+  const { data: previousPost } = await supabase
+    .from("posts")
+    .select("title, active, category_id")
+    .eq("id", id)
+    .single();
 
   let main_image = existingMainImage;
   if (mainImageFile && mainImageFile.size > 0) {
@@ -191,6 +210,20 @@ export async function updatePost(formData: FormData) {
     }
   }
 
+  await logAudit({
+    action: "post.updated",
+    entityType: "post",
+    entityId: id,
+    metadata: {
+      before: previousPost ?? null,
+      after: {
+        title,
+        active,
+        category_id: updatePayload.category_id ?? previousPost?.category_id ?? null,
+      },
+    },
+  });
+
   revalidatePath("/posts");
   revalidatePath(`/posts/${id}`);
 }
@@ -198,7 +231,23 @@ export async function updatePost(formData: FormData) {
 // delete post
 export async function deletePost(formData: FormData) {
   const id = formData.get("id") as string;
+
+  // Grab title before deleting, so the audit log is still readable afterwards
+  const { data: postToDelete } = await supabase
+    .from("posts")
+    .select("title")
+    .eq("id", id)
+    .single();
+
   const { error } = await supabase.from("posts").delete().eq("id", id);
   if (error) throw new Error(error.message);
+
+  await logAudit({
+    action: "post.deleted",
+    entityType: "post",
+    entityId: id,
+    metadata: { title: postToDelete?.title ?? null },
+  });
+
   revalidatePath("/posts");
 }

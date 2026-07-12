@@ -1,51 +1,56 @@
 "use server";
 
-import { createServerClient } from "@supabase/ssr";
-import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-
-function createClient() {
-  const cookieStore = cookies();
-  return createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!,
-    {
-      cookies: {
-        async getAll() {
-          return (await cookieStore).getAll();
-        },
-        setAll(cookiesToSet) {
-          cookiesToSet.forEach(async ({ name, value, options }) =>
-            (await cookieStore).set(name, value, options)
-          );
-        },
-      },
-    }
-  );
-}
+import { supabase } from "@/lib/supabase";
+import { logAudit } from "@/lib/audit-log";
 
 export async function signIn(formData: FormData) {
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
 
-  const supabase = createClient();
-  const { error } = await supabase.auth.signInWithPassword({ email, password });
+  const { data, error } = await supabase.auth.signInWithPassword({ email, password });
 
   if (error) {
+    await logAudit({
+      action: "auth.login_failed",
+      entityType: "auth",
+      actorEmail: email,
+      actorId: null,
+      metadata: { error: error.message },
+    });
     return { error: error.message };
   }
+
+  await logAudit({
+    action: "auth.login",
+    entityType: "auth",
+    entityId: data.user?.id,
+    actorId: data.user?.id ?? null,
+    actorEmail: data.user?.email ?? email,
+  });
 
   redirect("/");
 }
 
 export async function signOut() {
-  const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
   await supabase.auth.signOut();
+
+  await logAudit({
+    action: "auth.logout",
+    entityType: "auth",
+    entityId: user?.id,
+    actorId: user?.id ?? null,
+    actorEmail: user?.email ?? null,
+  });
+
   redirect("/login");
 }
 
 export async function getUser() {
-  const supabase = createClient();
   const { data: { user } } = await supabase.auth.getUser();
   return user;
 }

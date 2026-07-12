@@ -37,7 +37,7 @@ export function EventDeleteModal({ open, event, onClose }: Props) {
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-sm bg-sky-100 dark:bg-[#09161f]">
+      <DialogContent className="sm:max-w-sm bg-white dark:bg-[#09161f]">
 
         <DialogHeader>
           <DialogTitle>

@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { supabase } from "@/lib/supabase";
 import { eventSchema } from "@/lib/validations/event.schema";
+import { logAudit } from "@/lib/audit-log";
 
 // get events
 export async function getEvents() {
@@ -38,8 +39,20 @@ export async function createEvent(formData: FormData) {
     throw new Error(errorMessage);
   }
 
-  const { error } = await supabase.from("events").insert(parsed.data);
+  const { data: newEvent, error } = await supabase
+    .from("events")
+    .insert(parsed.data)
+    .select()
+    .single();
   if (error) throw new Error(error.message);
+
+  await logAudit({
+    action: "event.created",
+    entityType: "event",
+    entityId: newEvent?.id,
+    metadata: { name: parsed.data.name, date_from: parsed.data.date_from },
+  });
+
   revalidatePath("/events");
 }
 // update event
@@ -67,17 +80,54 @@ export async function updateEvent(formData: FormData) {
     throw new Error(errorMessage);
   }
 
+  // Fetch "before" state for a meaningful audit diff
+  const { data: previousEvent } = await supabase
+    .from("events")
+    .select("name, date_from, date_to, location")
+    .eq("id", id)
+    .single();
+
   const { error } = await supabase
     .from("events")
     .update(parsed.data)
     .eq("id", id);
   if (error) throw new Error(error.message);
+
+  await logAudit({
+    action: "event.updated",
+    entityType: "event",
+    entityId: id,
+    metadata: {
+      before: previousEvent ?? null,
+      after: {
+        name: parsed.data.name,
+        date_from: parsed.data.date_from,
+        date_to: parsed.data.date_to,
+        location: parsed.data.location,
+      },
+    },
+  });
+
   revalidatePath("/events");
 }
 
 // delete event
 export async function deleteEvent(id: string) {
+  const { data: eventToDelete } = await supabase
+    .from("events")
+    .select("name")
+    .eq("id", id)
+    .single();
+
   const { error } = await supabase.from("events").delete().eq("id", id);
   if (error) throw new Error(error.message);
+
+  await logAudit({
+    action: "event.deleted",
+    entityType: "event",
+    entityId: id,
+    metadata: { name: eventToDelete?.name ?? null },
+  });
+
   revalidatePath("/events");
 }
