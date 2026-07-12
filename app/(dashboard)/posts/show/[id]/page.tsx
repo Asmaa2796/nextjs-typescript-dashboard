@@ -36,13 +36,13 @@ export default async function ShowPostPage({ params }: Props) {
 
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
-        <Link href="/posts">
+        <Link href="/posts" className="cursor-pointer">
           <Button variant="ghost" size="sm" className="gap-2 cursor-pointer">
             <ArrowLeftIcon className="h-4 w-4" />
             Back to Posts
           </Button>
         </Link>
-        <Link href={`/posts/edit/${post.id}`}>
+        <Link href={`/posts/edit/${post.id}`} className="cursor-pointer">
           <Button size="sm" className="gap-2 cursor-pointer bg-green-600 hover:bg-green-700 text-white">
             <PencilIcon className="h-4 w-4" />
             Edit Post

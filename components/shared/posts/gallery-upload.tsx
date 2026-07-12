@@ -53,10 +53,10 @@ export function Pattern({
       {/* Drop Zone */}
       <div
         className={cn(
-          "rounded-lg relative bg-white border border-dashed p-8 text-center transition-colors cursor-pointer",
+          "relative cursor-pointer rounded-lg border border-dashed border-muted-foreground/25 bg-background p-8 text-center transition-colors dark:border-input/60 dark:bg-input/30",
           isDragging
-            ? "border-primary bg-primary/5"
-            : "border-muted-foreground/25 hover:border-muted-foreground/50"
+            ? "border-primary bg-primary/5 dark:bg-primary/10"
+            : "hover:border-muted-foreground/50"
         )}
         onDragEnter={handleDragEnter}
         onDragLeave={handleDragLeave}
@@ -75,7 +75,12 @@ export function Pattern({
               JPG, PNG, WEBP up to {formatBytes(maxSize)} each (max {maxFiles} files)
             </p>
           </div>
-          <Button type="button" className="cursor-pointer bg-gray-800" size="sm" onClick={(e) => { e.stopPropagation(); openFileDialog(); }}>
+          <Button
+            type="button"
+            className="cursor-pointer border border-border bg-background text-foreground hover:bg-accent dark:border-input/60 dark:bg-input/30 dark:text-foreground dark:hover:bg-input/50"
+            size="sm"
+            onClick={(e) => { e.stopPropagation(); openFileDialog(); }}
+          >
             <UploadIcon className="h-4 w-4 mr-1" />
             Select images
           </Button>
@@ -91,7 +96,13 @@ export function Pattern({
               {formatBytes(files.reduce((acc, f) => acc + f.file.size, 0))} total
             </Badge>
           </div>
-          <Button type="button" className="cursor-pointer bg-red-200 border-red-400 text-red-700 hover:bg-red-300" onClick={clearFiles} variant="outline" size="sm">
+          <Button
+            type="button"
+            className="cursor-pointer border-red-400/40 bg-background text-red-600 hover:bg-red-50 dark:bg-input/30 dark:text-red-300 dark:hover:bg-input/50"
+            onClick={clearFiles}
+            variant="outline"
+            size="sm"
+          >
             Clear all
           </Button>
         </div>
@@ -120,8 +131,8 @@ export function Pattern({
                   />
                 </>
               ) : (
-                <div className="bg-muted rounded-lg flex h-full w-full items-center justify-center border">
-                  <ImageIcon className="text-muted-foreground h-8 w-8" />
+                <div className="flex h-full w-full items-center justify-center rounded-lg border border-border bg-background dark:bg-input/30">
+                  <ImageIcon className="h-8 w-8 text-muted-foreground" />
                 </div>
               )}
 
@@ -133,7 +144,7 @@ export function Pattern({
                     onClick={() => setSelectedImage(fileItem.preview!)}
                     variant="secondary"
                     size="icon"
-                    className="size-7 cursor-pointer"
+                    className="size-7 cursor-pointer border border-border bg-background/90 text-foreground shadow-sm hover:bg-accent dark:border-input/60 dark:bg-input/30 dark:text-foreground dark:hover:bg-input/50"
                   >
                     <ZoomInIcon className="h-4 w-4" />
                   </Button>

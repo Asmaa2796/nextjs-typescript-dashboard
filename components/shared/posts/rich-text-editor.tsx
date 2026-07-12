@@ -58,9 +58,9 @@ export function RichTextEditor({
 
   return (
     <div
-      className={`min-h-[200px] rounded-md border bg-white overflow-hidden text-sm ${
+      className={`min-h-[200px] overflow-hidden rounded-md border bg-background text-sm text-foreground ${
         error ? "border-destructive" : "border-input"
-      }`}
+      } dark:border-input dark:bg-input/30 dark:text-foreground`}
     >
       <Editor
         editorState={editorState}
@@ -75,8 +75,9 @@ export function RichTextEditor({
             options: ["unordered", "ordered"],
           },
         }}
-        editorClassName="px-3 min-h-[160px] cursor-text"
-        toolbarClassName="!border-0 !border-b !border-input !mb-0 !rounded-none"
+        wrapperClassName="min-h-[200px] bg-background text-foreground dark:bg-input/30 dark:text-foreground"
+        editorClassName="px-3 min-h-[160px] cursor-text bg-background text-foreground dark:bg-input/30 dark:text-foreground [&_.public-DraftEditor-content]:min-h-[160px] [&_.public-DraftEditor-content]:bg-background [&_.public-DraftEditor-content]:text-foreground dark:[&_.public-DraftEditor-content]:bg-input/30 dark:[&_.public-DraftEditor-content]:text-foreground [&_.public-DraftEditorPlaceholder]:text-muted-foreground"
+        toolbarClassName="!border-0 !border-b !border-input !mb-0 !rounded-none !bg-background !text-foreground dark:!bg-input/30 dark:!text-foreground"
       />
     </div>
   );

@@ -79,7 +79,7 @@ function MainImagePicker({
   return (
     <div className="flex flex-col items-start gap-2">
       <div className="inline-flex items-center gap-2">
-        <div className="border-input rounded-md relative flex size-16 shrink-0 items-center justify-center overflow-hidden border bg-white">
+        <div className="border-input rounded-md relative flex size-16 shrink-0 items-center justify-center overflow-hidden border bg-background">
           {previewUrl ? (
             <Image
               className="size-full object-cover"
@@ -224,7 +224,7 @@ export function EditPostForm({
             {...register("title")}
             defaultValue={post.title}
             placeholder="Post title"
-            className="bg-white h-10"
+            className="h-10"
           />
           {errors.title && (
             <p className="text-destructive text-xs">{errors.title.message}</p>
@@ -286,7 +286,7 @@ export function EditPostForm({
                 id="category_id"
                 value={field.value || ""}
                 onChange={(event) => field.onChange(event.target.value)}
-                className="block w-full px-3 py-2.5 bg-white border border-border text-foreground text-sm rounded-md shadow-sm focus:border-ring focus:ring-2 focus:ring-ring"
+                className="block w-full px-3 py-2.5 bg-background border border-border text-foreground text-sm rounded-md shadow-sm focus:border-ring focus:ring-2 focus:ring-ring dark:bg-[#0f172a]"
               >
                 <option value="">Choose a category</option>
                 {categories.map((category) => (
@@ -305,7 +305,7 @@ export function EditPostForm({
         {/* Tags / Keywords */}
         <div className="space-y-1">
           <Label className="my-2">Tags / Keywords</Label>
-          <div className="flex flex-wrap gap-2 p-3 border rounded-md bg-white">
+          <div className="flex flex-wrap gap-2 p-3 border border-border rounded-md bg-background text-foreground dark:bg-[#0f172a]">
             {tags.map((tag) => {
               const isSelected = selectedTags.includes(tag.id.toString());
               return (

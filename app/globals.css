@@ -164,6 +164,71 @@ html, body {
   background: oklch(from var(--muted-foreground) l c h / 0.6);
 }
 
+.rdw-editor-toolbar {
+  border-color: var(--border) !important;
+  /* background: var(--background) !important; */
+  color: var(--foreground) !important;
+  border-radius: calc(var(--radius) * 0.75) calc(var(--radius) * 0.75) 0 0 !important;
+}
+
+.dark .rdw-editor-toolbar {
+  background: var(--input) !important;
+}
+
+.rdw-editor-toolbar .rdw-option-wrapper,
+.rdw-editor-toolbar .rdw-dropdown-wrapper {
+  border-color: var(--border) !important;
+  /* background: var(--background) !important; */
+  color: var(--foreground) !important;
+  box-shadow: none !important;
+}
+
+.dark .rdw-editor-toolbar .rdw-option-wrapper,
+.dark .rdw-editor-toolbar .rdw-dropdown-wrapper {
+  /* background: var(--input) !important; */
+}
+
+.rdw-editor-toolbar .rdw-option-active,
+.rdw-editor-toolbar .rdw-option-wrapper:hover,
+.rdw-editor-toolbar .rdw-dropdown-wrapper:hover,
+.rdw-editor-toolbar .rdw-option-wrapper:focus-visible,
+.rdw-editor-toolbar .rdw-dropdown-wrapper:focus-visible {
+  box-shadow: inset 0 0 0 1px var(--ring) !important;
+  background: var(--accent) !important;
+  color: var(--accent-foreground) !important;
+}
+
+.rdw-editor-main {
+  background: var(--background) !important;
+  color: var(--foreground) !important;
+  border: 1px solid var(--border) !important;
+  border-top: 0 !important;
+}
+
+.dark .rdw-editor-main {
+  background: var(--input) !important;
+}
+
+.rdw-editor-main .public-DraftEditor-content,
+.rdw-editor-main .public-DraftEditorPlaceholder {
+  color: var(--foreground) !important;
+  background: transparent !important;
+}
+
+.rdw-dropdown-optionwrapper {
+  background: var(--popover) !important;
+  color: var(--popover-foreground) !important;
+  border-color: var(--border) !important;
+}
+
+.rdw-editor-toolbar .rdw-option-wrapper svg,
+.rdw-editor-toolbar .rdw-dropdown-wrapper svg,
+.rdw-editor-toolbar .rdw-dropdown-optionwrapper svg {
+  fill: var(--foreground) !important;
+  color: var(--foreground) !important;
+  filter: none !important;
+}
+
 * {
   scrollbar-width: thin;
   scrollbar-color: oklch(from var(--muted-foreground) l c h / 0.4) transparent;

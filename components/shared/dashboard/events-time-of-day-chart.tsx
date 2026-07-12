@@ -2,6 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { useMemo } from "react";
+import { useTheme } from "next-themes";
 import type { ApexOptions } from "apexcharts";
 import type { TimeOfDayChartData } from "@/app/actions/stats";
 
@@ -23,6 +24,8 @@ const formatLabel = (dateStr: string) => {
 };
 
 export function EventsTimeOfDayChart({ data }: Props) {
+  const { resolvedTheme } = useTheme();
+  const isDark = resolvedTheme === "dark";
   const categories = useMemo(() => data.map((d) => d.date), [data]);
 
   const series = useMemo(
@@ -45,6 +48,7 @@ export function EventsTimeOfDayChart({ data }: Props) {
       stacked: true,
       toolbar: { show: false },
       zoom: { enabled: false },
+      background: isDark ? "#07131d" : "#ffffff",
     },
     colors: ["#0be35a", "#fdba74", "#a5b4fc"],
     dataLabels: { enabled: false },
@@ -53,12 +57,19 @@ export function EventsTimeOfDayChart({ data }: Props) {
       type: "gradient",
       gradient: { opacityFrom: 0.4, opacityTo: 0.6 },
     },
-    legend: { position: "top", horizontalAlign: "left" },
+    legend: {
+      position: "top",
+      horizontalAlign: "left",
+      labels: {
+        colors: isDark ? "#f8fafc" : "#334155",
+      },
+    },
     grid: {
       padding: {
         left: 5,
         right: 0,
       },
+      borderColor: isDark ? "rgba(148, 163, 184, 0.25)" : "rgba(15, 23, 42, 0.12)",
     },
     xaxis: {
       type: "category",
@@ -66,9 +77,20 @@ export function EventsTimeOfDayChart({ data }: Props) {
       tickPlacement: "on",
       labels: {
         formatter: formatLabel,
+        style: {
+          colors: isDark ? "#cbd5e1" : "#64748b",
+        },
+      },
+    },
+    yaxis: {
+      labels: {
+        style: {
+          colors: isDark ? "#cbd5e1" : "#64748b",
+        },
       },
     },
     tooltip: {
+      theme: isDark ? "dark" : "light",
       x: {
         formatter: (_value, opts) => {
           const index = opts?.dataPointIndex;

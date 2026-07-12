@@ -45,9 +45,12 @@ export function CategoriesIndex({
           {categories.map((category) => (
             <Card
               key={category.id}
-              className="transition-all hover:shadow-md dark:bg-gray-950"
+              className="relative overflow-hidden transition-all hover:shadow-md dark:bg-gray-950"
             >
-              <CardContent className="flex items-center justify-between p-5">
+              <div className="absolute -top-10 -right-10 h-28 w-28 rounded-full bg-cyan-500/15 dark:bg-cyan-950 blur-3xl" />
+              <div className="absolute -bottom-8 -left-8 h-20 w-20 rounded-full bg-sky-500/15 dark:bg-sky-950 blur-2xl" />
+
+              <CardContent className="relative z-10 flex items-center justify-between p-5">
                 <div>
                   <h3 className="font-semibold">
                     {category.name}
@@ -55,7 +58,6 @@ export function CategoriesIndex({
 
                   <div className="mt-2 flex items-center gap-2 text-sm text-muted-foreground">
                     <FileText className="h-4 w-4" />
-
                     {category.posts_count ?? 0} Posts
                   </div>
                 </div>
@@ -64,9 +66,7 @@ export function CategoriesIndex({
                   size="icon"
                   variant="destructive"
                   className="cursor-pointer"
-                  onClick={() =>
-                    setSelectedCategory(category)
-                  }
+                  onClick={() => setSelectedCategory(category)}
                 >
                   <Trash2 className="h-4 w-4" />
                 </Button>

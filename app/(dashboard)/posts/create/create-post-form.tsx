@@ -71,7 +71,7 @@ function MainImagePicker({
   return (
     <div className="flex flex-col items-start gap-2">
       <div className="inline-flex items-center gap-2">
-        <div className="border-input rounded-md relative flex size-16 shrink-0 items-center justify-center overflow-hidden border bg-white">
+        <div className="border-input rounded-md relative flex size-16 shrink-0 items-center justify-center overflow-hidden border bg-background">
           {previewUrl ? (
             <Image
               className="size-full object-cover"
@@ -172,14 +172,14 @@ export default function CreatePostPage({ categories, tags }: CreatePostPageProps
 
   return (
     <div className="max-w-5xl mx-auto py-8 px-2">
-      <h1 className="text-2xl font-bold mb-8 text-slate-800">Create Post</h1>
+      <h1 className="text-2xl font-bold mb-8 text-slate-600">Create Post</h1>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
 
         {/* Title */}
         <div className="space-y-1">
           <Label className="my-2" htmlFor="title">Title<sup className="text-red-600">*</sup></Label>
-          <Input id="title" {...register("title")} placeholder="Post title" className="bg-white h-10" />
+          <Input id="title" {...register("title")} placeholder="Post title" className="h-10" />
           {errors.title && (
             <p className="text-destructive text-xs">{errors.title.message}</p>
           )}
@@ -236,7 +236,7 @@ export default function CreatePostPage({ categories, tags }: CreatePostPageProps
                 id="category_id"
                 value={field.value}
                 onChange={(event) => field.onChange(event.target.value)}
-                className="block w-full px-3 py-2.5 bg-white border border-border text-foreground text-sm rounded-md shadow-sm focus:border-ring focus:ring-2 focus:ring-ring"
+                className="block w-full rounded-md border border-input bg-background px-3 py-2.5 text-sm text-foreground shadow-sm transition-colors focus:border-ring focus:ring-2 focus:ring-ring dark:bg-input/30 dark:text-foreground"
               >
                 <option value="">Choose a category</option>
                 {categories.map((category) => (
@@ -254,7 +254,7 @@ export default function CreatePostPage({ categories, tags }: CreatePostPageProps
 
         <div className="space-y-1">
           <Label className="my-2">Tags / Keywords<sup className="text-red-600">*</sup></Label>
-          <div className="flex flex-wrap gap-2 p-3 border rounded-md bg-white">
+          <div className="flex flex-wrap gap-2 rounded-md border border-input bg-background p-3 text-foreground dark:bg-input/30 dark:text-foreground">
             {tags.map((tag) => {
               const isSelected = selectedTags.includes(tag.id.toString());
               return (

@@ -116,7 +116,7 @@ export function AuditLogTable({ data }: AuditLogTableProps) {
       {/* Table */}
       <div className="border border-border rounded-md bg-card dark:bg-[#09161f] overflow-x-auto shadow-sm">
         <Table>
-          <TableHeader className="bg-muted/80">
+          <TableHeader className="bg-gray-50">
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (

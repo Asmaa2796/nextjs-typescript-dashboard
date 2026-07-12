@@ -59,7 +59,7 @@ export function Navbar() {
             <DropdownMenuSeparator />
 
             <DropdownMenuItem>
-              <Link href="/settings" className="flex w-full items-center cursor-pointer">
+              <Link href="/settings" className="flex w-full cursor-pointer items-center">
                 Profile
               </Link>
             </DropdownMenuItem>

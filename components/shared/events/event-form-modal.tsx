@@ -106,9 +106,7 @@ export default function EventFormModal({ open, event, onclose }: props) {
                                 <label className="text-sm font-medium">Event Name</label>
                                 <input
                                     {...register("name")}
-                                    className="w-full mt-1 border rounded-md px-3 py-2 text-sm
-                     bg-background dark:bg-gray-950 focus:outline-none focus:ring-1
-                     focus:ring-ring"
+                                    className="mt-1 w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground shadow-sm transition-colors placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring dark:bg-input/30 dark:text-foreground dark:placeholder:text-muted-foreground"
                                     placeholder="Example: Team Meeting"
                                 />
                                 {errors.name && (
@@ -124,9 +122,7 @@ export default function EventFormModal({ open, event, onclose }: props) {
                                 </label>
                                 <input
                                     {...register("location")}
-                                    className="w-full mt-1 border rounded-md px-3 py-2 text-sm
-                     bg-background dark:bg-gray-950 focus:outline-none focus:ring-1
-                     focus:ring-ring"
+                                    className="mt-1 w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground shadow-sm transition-colors placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring dark:bg-input/30 dark:text-foreground dark:placeholder:text-muted-foreground"
                                     placeholder="Example: Egypt,Cairo"
                                 />
                                 {errors.location && (
@@ -144,9 +140,7 @@ export default function EventFormModal({ open, event, onclose }: props) {
                                 <input
                                     type="date"
                                     {...register("date_from")}
-                                    className="w-full mt-1 border rounded-md px-3 py-2 text-sm
-                       bg-background dark:bg-gray-950 focus:outline-none focus:ring-1
-                       focus:ring-ring"
+                                    className="mt-1 w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground shadow-sm transition-colors placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring dark:bg-input/30 dark:text-foreground dark:placeholder:text-muted-foreground"
                                 />
                                 {errors.date_from && (
                                     <p className="text-destructive text-xs mt-1">
@@ -160,9 +154,7 @@ export default function EventFormModal({ open, event, onclose }: props) {
                                 <input
                                     type="date"
                                     {...register("date_to")}
-                                    className="w-full mt-1 border rounded-md px-3 py-2 text-sm
-                       bg-background dark:bg-gray-950 focus:outline-none focus:ring-1
-                       focus:ring-ring"
+                                    className="mt-1 w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground shadow-sm transition-colors placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring dark:bg-input/30 dark:text-foreground dark:placeholder:text-muted-foreground"
                                 />
                                 {errors.date_to && (
                                     <p className="text-destructive text-xs mt-1">
@@ -179,9 +171,7 @@ export default function EventFormModal({ open, event, onclose }: props) {
                                 <input
                                     type="time"
                                     {...register("time_from")}
-                                    className="w-full mt-1 border rounded-md px-3 py-2 text-sm
-                       bg-background dark:bg-gray-950 focus:outline-none focus:ring-1
-                       focus:ring-ring"
+                                    className="mt-1 w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground shadow-sm transition-colors placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring dark:bg-input/30 dark:text-foreground dark:placeholder:text-muted-foreground"
                                 />
                                 {errors.time_from && (
                                     <p className="text-destructive text-xs mt-1">
@@ -195,9 +185,7 @@ export default function EventFormModal({ open, event, onclose }: props) {
                                 <input
                                     type="time"
                                     {...register("time_to")}
-                                    className="w-full mt-1 border rounded-md px-3 py-2 text-sm
-                       bg-background dark:bg-gray-950 focus:outline-none focus:ring-1
-                       focus:ring-ring"
+                                    className="mt-1 w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground shadow-sm transition-colors placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring dark:bg-input/30 dark:text-foreground dark:placeholder:text-muted-foreground"
                                 />
                                 {errors.time_to && (
                                     <p className="text-destructive text-xs mt-1">
@@ -216,9 +204,7 @@ export default function EventFormModal({ open, event, onclose }: props) {
                                 </label>
                                 <input
                                     {...register("phone")}
-                                    className="w-full mt-1 border rounded-md px-3 py-2 text-sm
-                       bg-background dark:bg-gray-950 focus:outline-none focus:ring-1
-                       focus:ring-ring"
+                                    className="mt-1 w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground shadow-sm transition-colors placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring dark:bg-input/30 dark:text-foreground dark:placeholder:text-muted-foreground"
                                     placeholder="01xxxxxxxxx"
                                 />
                                 {errors.phone && (
@@ -235,9 +221,7 @@ export default function EventFormModal({ open, event, onclose }: props) {
                                 <input
                                     type="email"
                                     {...register("email")}
-                                    className="w-full mt-1 border rounded-md px-3 py-2 text-sm
-                       bg-background dark:bg-gray-950 focus:outline-none focus:ring-1
-                       focus:ring-ring"
+                                    className="mt-1 w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground shadow-sm transition-colors placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring dark:bg-input/30 dark:text-foreground dark:placeholder:text-muted-foreground"
                                     placeholder="example@email.com"
                                 />
                                 {errors.email && (

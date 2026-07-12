@@ -222,7 +222,7 @@ export const columns: ColumnDef<Post>[] = [
             <Tooltip>
               <TooltipTrigger className="cursor-pointer inline-flex items-center justify-center h-8 w-8 rounded-md border border-border hover:bg-muted">
                 <span className="text-center">
-                  <Link href={`/posts/show/${post.id}`}>
+                  <Link href={`/posts/show/${post.id}`} className="cursor-pointer">
                     <Eye className="h-4 w-4 text-blue-400" />
                   </Link>
                 </span>
@@ -236,7 +236,7 @@ export const columns: ColumnDef<Post>[] = [
             <Tooltip>
               <TooltipTrigger className="cursor-pointer inline-flex items-center justify-center h-8 w-8 rounded-md border border-border hover:bg-muted">
                 <span className="text-center">
-                  <Link href={`/posts/edit/${post.id}`}>
+                  <Link href={`/posts/edit/${post.id}`} className="cursor-pointer">
                     <Pencil className="h-4 w-4 text-green-400" />
                   </Link>
                 </span>

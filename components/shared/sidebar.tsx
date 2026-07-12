@@ -77,7 +77,7 @@ function SidebarContent({
             const isPostsActive = isPostsPath(pathname);
             return (
               <Collapsible key={item.title} open={postsOpen} onOpenChange={setPostsOpen}>
-                <CollapsibleTrigger className="w-full">
+                <CollapsibleTrigger className="w-full cursor-pointer">
                   <span className={`flex w-full cursor-pointer items-center justify-between rounded-md px-3 py-2 ${isPostsActive ? "bg-sky-100 dark:bg-[#09161f] text-sky-600" : "hover:bg-accent dark:hover:bg-[#09161f] text-slate-700"}`}>
                     <span className="flex items-center gap-3">
                       <Icon size={18} />
@@ -104,7 +104,7 @@ function SidebarContent({
                           onClick={() => {
                             onNavigate?.();
                           }}
-                          className={`flex items-center gap-3 rounded-md px-3 py-2 text-sm ${isChildActive ? "text-sky-500 dark:bg-[#09161f] bg-slate-50" : "hover:bg-accent dark:hover:bg-[#09161f]"}`}
+                          className={`flex cursor-pointer items-center gap-3 rounded-md px-3 py-2 text-sm ${isChildActive ? "text-sky-500 dark:bg-[#09161f] bg-slate-50" : "hover:bg-accent dark:hover:bg-[#09161f]"}`}
                         >
                           <ChildIcon size={16} />
                           <span>{child.title}</span>
@@ -125,7 +125,7 @@ function SidebarContent({
                 setPostsOpen(false);
                 onNavigate?.();
               }}
-              className={`flex items-center gap-3 rounded-md px-3 py-2 ${pathname === item.href ? "bg-sky-100 dark:bg-[#09161f] text-sky-600" : "hover:bg-accent dark:hover:bg-[#09161f] text-slate-700"}`}
+              className={`flex cursor-pointer items-center gap-3 rounded-md px-3 py-2 ${pathname === item.href ? "bg-sky-100 dark:bg-[#09161f] text-sky-600" : "hover:bg-accent dark:hover:bg-[#09161f] text-slate-700"}`}
             >
               <Icon size={18} />
               {!collapsed && <span>{item.title}</span>}
@@ -193,7 +193,7 @@ export function Sidebar({ collapsed: desktopCollapsed, onCollapsedChange }: Side
           <button
             type="button"
             onClick={() => setMobileOpen(true)}
-            className="rounded-md border bg-background p-2 shadow-sm"
+            className="cursor-pointer rounded-md border bg-background p-2 shadow-sm"
             aria-label="Open sidebar"
           >
             ☰
@@ -206,7 +206,7 @@ export function Sidebar({ collapsed: desktopCollapsed, onCollapsedChange }: Side
             <aside className="relative h-full w-[280px] border-r bg-background p-4 dark:bg-gray-950">
               <div className="mb-8 flex items-center justify-between">
                 <h2 className="text-xl font-bold text-slate-600">Admin Panel</h2>
-                <button type="button" onClick={() => setMobileOpen(false)} className="rounded-md p-2 hover:bg-accent dark:hover:bg-[#09161f]" aria-label="Close sidebar">✕</button>
+                <button type="button" onClick={() => setMobileOpen(false)} className="cursor-pointer rounded-md p-2 hover:bg-accent dark:hover:bg-[#09161f]" aria-label="Close sidebar">✕</button>
               </div>
               <SidebarContent
                 collapsed={false}

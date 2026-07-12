@@ -2,6 +2,7 @@
 
 import dynamic from "next/dynamic"
 import { useState } from "react"
+import { useTheme } from "next-themes"
 import { PostsStatusStats } from "@/app/actions/stats"
 
 const ApexChart = dynamic(() => import("react-apexcharts"), { ssr: false })
@@ -12,25 +13,29 @@ type Props = {
 
 export function PostsStatusChart({ stats }: Props) {
   const [open, setOpen] = useState(false)
+  const { resolvedTheme } = useTheme()
+  const isDark = resolvedTheme === "dark"
 
   const options = {
     chart: {
       type: "radialBar" as const,
       fontFamily: "inherit",
+      background: isDark ? "#07131d" : "#ffffff",
     },
     plotOptions: {
       radialBar: {
         hollow: { size: "60%" },
         track: {
-          background: "#E6F1FB",
+          background: isDark ? "#0f172a" : "#E6F1FB",
         },
         dataLabels: {
           show: true,
-          name: { show: false },
+          name: { show: false, color: isDark ? "#f8fafc" : "#334155" },
           value: {
             fontSize: "28px",
             fontWeight: 600,
             offsetY: 8,
+            color: isDark ? "#f8fafc" : "#0f172a",
             formatter: () => `${stats.activePercentage}%`,
           },
         },
