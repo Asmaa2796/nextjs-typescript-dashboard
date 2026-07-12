@@ -32,7 +32,7 @@ export default async function ShowPostPage({ params }: Props) {
   const tags = postTags?.map((pt: any) => pt.tags).filter(Boolean) || [];
 
   return (
-    <div className="max-w-5xl mx-auto py-8 px-4 bg-white rounded-lg dark:bg-[#09161f] shadow">
+    <div className="max-w-5xl mx-auto py-8 px-4 bg-card text-card-foreground dark:bg-[#09161f] rounded-lg border border-border shadow-sm">
 
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
@@ -63,7 +63,7 @@ export default async function ShowPostPage({ params }: Props) {
 
       {/* Title + Status */}
       <div className="flex items-start gap-3 mb-4">
-        <h1 className="text-3xl font-bold flex-1">{post.title}</h1>
+        <h1 className="text-3xl font-bold flex-1 text-foreground">{post.title}</h1>
         <Badge
           variant="outline"
           className={
@@ -81,7 +81,7 @@ export default async function ShowPostPage({ params }: Props) {
         {post.category_id && (
           <div>
             <span className="text-muted-foreground text-sm mr-2">Category:</span>
-            <Badge variant="secondary">{post.category_name || "Uncategorized"}</Badge>
+            <Badge variant="secondary" className="text-foreground">{post.category_name || "Uncategorized"}</Badge>
           </div>
         )}
         {tags.length > 0 && (

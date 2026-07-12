@@ -1,46 +1,87 @@
 "use client"
 
-import { FolderOpen } from "lucide-react"
-import { Category } from "@/lib/types/category.types"
+import { useState } from "react"
+import {
+  FolderOpen,
+  Trash2,
+  FileText,
+} from "lucide-react"
+
+import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
+
+import { CategoryDeleteModal } from "./category-delete-modal"
+
+interface Category {
+  id: number
+  name: string
+  posts_count?: number
+}
 
 export function CategoriesIndex({
   categories,
 }: {
   categories: Category[]
 }) {
-  return (
-    <div className="relative overflow-hidden rounded-2xl border bg-card dark:bg-[#09161f] p-6 shadow-sm">
-      {/* Decorative background */}
-      <div className="absolute -top-16 -right-16 h-48 w-48 rounded-full bg-blue-500/10 blur-3xl dark:bg-blue-400/10" />
-      <div className="absolute -bottom-12 -left-12 h-32 w-32 rounded-full bg-violet-500/10 blur-2xl dark:bg-violet-400/10" />
+  const [selectedCategory, setSelectedCategory] =
+    useState<Category | null>(null)
 
-      <div className="relative z-10">
-        {/* Header */}
+  return (
+    <>
+      <div className="rounded-2xl border bg-card dark:bg-[#09161f] p-6 shadow-sm">
         <div className="mb-6 flex items-center justify-between">
           <div>
-            <h2 className="text-md text-muted-foreground">Current categories</h2>
-            <p className="text-sm text-muted-foreground">
-              {categories.length} available
+            <p className="text-muted-foreground">
+              Manage all categories in one place.
             </p>
           </div>
 
-          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary">
-            <FolderOpen className="h-6 w-6" />
+          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10">
+            <FolderOpen className="h-6 w-6 text-primary" />
           </div>
         </div>
 
-        {/* Categories */}
-        <div className="flex flex-wrap gap-3">
+        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
           {categories.map((category) => (
-            <div
+            <Card
               key={category.id}
-              className="rounded-full border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-medium text-blue-700 transition-all hover:scale-105 hover:bg-blue-100 dark:border-blue-900 dark:bg-blue-950/50 dark:text-blue-300 dark:hover:bg-blue-900/50"
+              className="transition-all hover:shadow-md dark:bg-gray-950"
             >
-              {category.name}
-            </div>
+              <CardContent className="flex items-center justify-between p-5">
+                <div>
+                  <h3 className="font-semibold">
+                    {category.name}
+                  </h3>
+
+                  <div className="mt-2 flex items-center gap-2 text-sm text-muted-foreground">
+                    <FileText className="h-4 w-4" />
+
+                    {category.posts_count ?? 0} Posts
+                  </div>
+                </div>
+
+                <Button
+                  size="icon"
+                  variant="destructive"
+                  className="cursor-pointer"
+                  onClick={() =>
+                    setSelectedCategory(category)
+                  }
+                >
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              </CardContent>
+            </Card>
           ))}
         </div>
       </div>
-    </div>
+
+      <CategoryDeleteModal
+        isOpen={!!selectedCategory}
+        onClose={() => setSelectedCategory(null)}
+        category={selectedCategory}
+        allCategories={categories}
+      />
+    </>
   )
 }

@@ -25,7 +25,7 @@ export default async function AuditLogsPage() {
   return (
     <div className="max-w-6xl mx-auto py-8 px-2">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-slate-800">Audit Logs</h1>
+        <h1 className="text-2xl font-bold text-foreground">Audit Logs</h1>
         <p className="text-sm text-muted-foreground mt-1">
           A record of every create, update, and delete action taken across the
           dashboard.

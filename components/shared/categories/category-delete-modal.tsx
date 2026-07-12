@@ -10,13 +10,6 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { AlertTriangle, Loader2 } from "lucide-react"
 import { toast } from "sonner"
@@ -42,25 +35,36 @@ export function CategoryDeleteModal({
   const [targetCategoryId, setTargetCategoryId] = useState("")
 
   useEffect(() => {
-    if (isOpen && category) {
-      const checkPostRelations = async () => {
-        setCheckingRelations(true)
+    if (!isOpen) {
+      setTargetCategoryId("")
+      return
+    }
 
-        const { count, error } = await supabase
-          .from("posts")
-          .select("*", { count: "exact", head: true })
-          .eq("category_id", category.id)
+    if (!category) {
+      setPostCount(0)
+      setCheckingRelations(false)
+      setTargetCategoryId("")
+      return
+    }
 
-        if (!error && count !== null) {
-          setPostCount(count)
-        }
+    const checkPostRelations = async () => {
+      setCheckingRelations(true)
+      setTargetCategoryId("")
 
-        setCheckingRelations(false)
+      const { count, error } = await supabase
+        .from("posts")
+        .select("*", { count: "exact", head: true })
+        .eq("category_id", category.id)
+
+      if (!error && count !== null) {
+        setPostCount(count)
       }
 
-      checkPostRelations()
+      setCheckingRelations(false)
     }
-  }, [isOpen, category, supabase])
+
+    checkPostRelations()
+  }, [isOpen, category])
 
   const availableCategories = allCategories.filter(
     (c) => c.id !== category?.id
@@ -106,7 +110,7 @@ export function CategoryDeleteModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[425px] dark:bg-[#09161f]">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-destructive">
             <AlertTriangle className="h-5 w-5" />
@@ -137,29 +141,22 @@ export function CategoryDeleteModal({
             </Alert>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium">
+              <label className="mb-2 block text-sm font-medium">
                 Select a replacement category:
               </label>
 
-              <Select
-                onValueChange={(value) => setTargetCategoryId(value ?? "")}
+              <select
                 value={targetCategoryId}
+                onChange={(event) => setTargetCategoryId(event.target.value)}
+                className="mt-1 block w-full cursor-pointer rounded-md border border-border bg-white px-3 py-2.5 text-sm text-foreground shadow-sm focus:border-ring focus:ring-2 focus:ring-ring"
               >
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Select a category..." />
-                </SelectTrigger>
-
-                <SelectContent>
-                  {availableCategories.map((cat) => (
-                    <SelectItem
-                      key={cat.id}
-                      value={cat.id.toString()}
-                    >
-                      {cat.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+                <option value="">Select a category...</option>
+                {availableCategories.map((cat) => (
+                  <option key={cat.id} value={cat.id.toString()}>
+                    {cat.name}
+                  </option>
+                ))}
+              </select>
             </div>
           </div>
         ) : (
@@ -171,6 +168,7 @@ export function CategoryDeleteModal({
 
         <DialogFooter className="gap-2 sm:gap-0">
           <Button
+            className="cursor-pointer mx-2"
             variant="destructive"
             onClick={handleDelete}
             disabled={

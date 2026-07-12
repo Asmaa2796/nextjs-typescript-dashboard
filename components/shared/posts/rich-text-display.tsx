@@ -30,7 +30,7 @@ export function RichTextDisplay({ content }: RichTextDisplayProps) {
 
   return (
     <div
-      className="text-sm leading-relaxed text-gray-700 prose max-w-none
+      className="text-sm leading-relaxed text-foreground prose max-w-none
         [&_strong]:font-bold
         [&_em]:italic
         [&_u]:underline

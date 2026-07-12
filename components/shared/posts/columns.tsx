@@ -181,7 +181,7 @@ export const columns: ColumnDef<Post>[] = [
       return (
         <Badge
           variant="outline"
-          className="border-indigo-400 bg-indigo-50 text-indigo-400"
+          className="border-indigo-400 bg-indigo-50 text-indigo-400 dark:bg-indigo-400 dark:text-indigo-900"
         >
           {category ?? "No Category"}
         </Badge>

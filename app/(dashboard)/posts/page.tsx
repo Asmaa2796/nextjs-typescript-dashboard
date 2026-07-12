@@ -30,7 +30,7 @@ export default async function PostsPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-3xl font-bold text-slate-800">
+      <h1 className="text-3xl font-bold text-slate-600">
         Posts
       </h1>
 

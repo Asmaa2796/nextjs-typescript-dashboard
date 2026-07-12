@@ -83,13 +83,13 @@ export function AuditLogTable({ data }: AuditLogTableProps) {
           placeholder="Search by actor, action, or entity id..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="bg-white sm:max-w-xs"
+          className="sm:max-w-xs bg-background text-foreground"
         />
 
         <select
           value={actionFilter}
           onChange={(e) => setActionFilter(e.target.value)}
-          className="px-3 py-2 bg-white border border-border text-sm rounded-md shadow-sm focus:border-ring focus:ring-2 focus:ring-ring"
+          className="px-3 py-2 bg-background text-foreground border border-border dark:bg-[#09161f] text-sm rounded-md shadow-sm focus:border-ring focus:ring-2 focus:ring-ring"
         >
           <option value="all">All actions</option>
           {actionOptions.map((action) => (
@@ -102,7 +102,7 @@ export function AuditLogTable({ data }: AuditLogTableProps) {
         <select
           value={entityFilter}
           onChange={(e) => setEntityFilter(e.target.value)}
-          className="px-3 py-2 bg-white border border-border text-sm rounded-md shadow-sm focus:border-ring focus:ring-2 focus:ring-ring"
+          className="px-3 py-2 bg-background text-foreground dark:bg-[#09161f] border border-border text-sm rounded-md shadow-sm focus:border-ring focus:ring-2 focus:ring-ring"
         >
           <option value="all">All entities</option>
           {entityOptions.map((entity) => (
@@ -114,15 +114,15 @@ export function AuditLogTable({ data }: AuditLogTableProps) {
       </div>
 
       {/* Table */}
-      <div className="border rounded-md bg-white overflow-x-auto">
+      <div className="border border-border rounded-md bg-card dark:bg-[#09161f] overflow-x-auto shadow-sm">
         <Table>
-          <TableHeader className="bg-gray-50 dark:bg-[#09161f]">
+          <TableHeader className="bg-muted/80">
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
                   <TableHead
                     key={header.id}
-                    className="cursor-pointer select-none"
+                    className="cursor-pointer select-none text-foreground"
                     onClick={header.column.getToggleSortingHandler()}
                   >
                     <div className="flex items-center w-full gap-2">
@@ -198,7 +198,7 @@ export function AuditLogTable({ data }: AuditLogTableProps) {
 
       {/* Detail dialog */}
       <Dialog open={!!selectedLog} onOpenChange={(open) => !open && setSelectedLog(null)}>
-        <DialogContent className="max-w-lg">
+        <DialogContent className="max-w-lg bg-card text-card-foreground dark:bg-[#09161f] border-border">
           <DialogHeader>
             <DialogTitle>Audit log details</DialogTitle>
           </DialogHeader>
@@ -207,24 +207,24 @@ export function AuditLogTable({ data }: AuditLogTableProps) {
               <div className="grid grid-cols-2 gap-2">
                 <div>
                   <p className="text-muted-foreground text-xs">Actor</p>
-                  <p>{selectedLog.actor_email ?? "Unknown"}</p>
+                  <p className="text-foreground">{selectedLog.actor_email ?? "Unknown"}</p>
                 </div>
                 <div>
                   <p className="text-muted-foreground text-xs">Action</p>
-                  <p className="font-mono">{selectedLog.action}</p>
+                  <p className="font-mono text-foreground">{selectedLog.action}</p>
                 </div>
                 <div>
                   <p className="text-muted-foreground text-xs">Entity</p>
-                  <p className="capitalize">{selectedLog.entity_type}</p>
+                  <p className="capitalize text-foreground">{selectedLog.entity_type}</p>
                 </div>
                 <div>
                   <p className="text-muted-foreground text-xs">Entity ID</p>
-                  <p className="font-mono">{selectedLog.entity_id ?? "-"}</p>
+                  <p className="font-mono text-foreground">{selectedLog.entity_id ?? "-"}</p>
                 </div>
               </div>
               <div>
                 <p className="text-muted-foreground text-xs mb-1">Metadata</p>
-                <pre className="bg-muted rounded-md p-3 text-xs overflow-x-auto max-h-64">
+                <pre className="bg-muted rounded-md p-3 text-xs overflow-x-auto max-h-64 border border-border text-foreground">
                   {selectedLog.metadata
                     ? JSON.stringify(selectedLog.metadata, null, 2)
                     : "No metadata recorded"}
