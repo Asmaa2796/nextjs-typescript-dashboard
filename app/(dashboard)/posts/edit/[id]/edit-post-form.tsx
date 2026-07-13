@@ -286,11 +286,13 @@ export function EditPostForm({
                 id="category_id"
                 value={field.value || ""}
                 onChange={(event) => field.onChange(event.target.value)}
-                className="block w-full px-3 py-2.5 bg-background border border-border text-foreground text-sm rounded-md shadow-sm focus:border-ring focus:ring-2 focus:ring-ring dark:bg-[#0f172a]"
+                className="block w-full appearance-none rounded-md border border-input bg-background px-3 py-2.5 pr-10 text-sm text-foreground shadow-sm transition-colors focus:border-ring focus:ring-2 focus:ring-ring dark:scheme-dark dark:bg-input/30 dark:text-foreground"
               >
-                <option value="">Choose a category</option>
+                <option value="" className="bg-background text-foreground dark:bg-gray-950 dark:text-foreground">
+                  Choose a category
+                </option>
                 {categories.map((category) => (
-                  <option key={category.id} value={category.id.toString()}>
+                  <option key={category.id} value={category.id.toString()} className="bg-background text-foreground dark:bg-gray-950 dark:text-foreground">
                     {category.name}
                   </option>
                 ))}
