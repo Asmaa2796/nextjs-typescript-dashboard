@@ -4,7 +4,7 @@ import { supabase } from "@/lib/supabase";
 
 export type DashboardStats = {
     totalPosts: number
-    totalUsers: number
+    totalCategories: number
     totalEvents: number
 }
 
@@ -23,20 +23,19 @@ export type PostsStatusStats = {
 
 export async function getDashboardStats(): Promise<DashboardStats> {
 
-  const [postsRes, eventsRes] = await Promise.all([
+  const [postsRes, eventsRes, categoriesRes] = await Promise.all([
     supabase.from("posts").select("*", { count: "exact", head: true }),
     supabase.from("events").select("*", { count: "exact", head: true }),
+    supabase.from("categories").select("*", { count: "exact", head: true }),
   ])
 
   if (postsRes.error) throw new Error(postsRes.error.message)
   if (eventsRes.error) throw new Error(eventsRes.error.message)
-
-  
-  const totalUsers = 0
+  if (categoriesRes.error) throw new Error(categoriesRes.error.message)
 
   return {
     totalPosts: postsRes.count ?? 0,
-    totalUsers,
+    totalCategories: categoriesRes.count ?? 0,
     totalEvents: eventsRes.count ?? 0,
   }
 }

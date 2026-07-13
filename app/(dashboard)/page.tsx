@@ -1,4 +1,4 @@
-import { Calendar, FileText, Users } from "lucide-react";
+import { Calendar, FileText, Blocks } from "lucide-react";
 import {
   getDashboardStats,
   getEventsChartData,
@@ -42,9 +42,9 @@ export default async function DashboardPage() {
           iconBgClass="bg-orange-100 dark:bg-orange-950"
         />
         <StatsCard
-          label="Total users"
-          value={stats.totalUsers}
-          icon={Users}
+          label="Total Categories"
+          value={stats.totalCategories}
+          icon={Blocks}
           iconColorClass="text-sky-600 dark:text-sky-400"
           iconBgClass="bg-sky-100 dark:bg-sky-950"
         />

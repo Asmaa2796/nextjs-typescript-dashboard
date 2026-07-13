@@ -148,7 +148,7 @@ export function CategoryDeleteModal({
               <select
                 value={targetCategoryId}
                 onChange={(event) => setTargetCategoryId(event.target.value)}
-                className="mt-1 block w-full cursor-pointer rounded-md border border-border bg-white px-3 py-2.5 text-sm text-foreground shadow-sm focus:border-ring focus:ring-2 focus:ring-ring"
+                className="mt-1 block w-full cursor-pointer rounded-md dark:bg-[#09161f] border border-border bg-white px-3 py-2.5 text-sm text-foreground shadow-sm focus:border-ring focus:ring-2 focus:ring-ring"
               >
                 <option value="">Select a category...</option>
                 {availableCategories.map((cat) => (

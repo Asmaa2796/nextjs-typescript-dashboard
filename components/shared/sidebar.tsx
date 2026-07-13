@@ -3,7 +3,6 @@ import Link from "next/link";
 import {
   LayoutDashboard,
   FileText,
-  Users,
   Calendar as Events,
   Settings,
   PlusCircle,
@@ -12,8 +11,10 @@ import {
   PanelLeftOpen,
   PanelRightOpen,
   LogOut,
-  LayoutList,
-  ClipboardClock
+  Blocks,
+  ClipboardClock,
+  Menu,
+  X,
 } from "lucide-react";
 
 import {
@@ -24,8 +25,50 @@ import {
 import Image from "next/image";
 
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { createContext, useContext, useState, ReactNode } from "react";
 import { signOut } from "@/app/actions/auth";
+
+type SidebarContextType = {
+  desktopCollapsed: boolean;
+  setDesktopCollapsed: (val: boolean) => void;
+  mobileOpen: boolean;
+  setMobileOpen: (val: boolean) => void;
+};
+
+const SidebarContext = createContext<SidebarContextType | null>(null);
+
+export function SidebarProvider({ children }: { children: ReactNode }) {
+  const [desktopCollapsed, setDesktopCollapsed] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  return (
+    <SidebarContext.Provider
+      value={{ desktopCollapsed, setDesktopCollapsed, mobileOpen, setMobileOpen }}
+    >
+      {children}
+    </SidebarContext.Provider>
+  );
+}
+
+export function useSidebar() {
+  const ctx = useContext(SidebarContext);
+  if (!ctx) throw new Error("useSidebar must be used within a SidebarProvider");
+  return ctx;
+}
+
+export function SidebarTrigger({ className }: { className?: string }) {
+  const { mobileOpen, setMobileOpen } = useSidebar();
+  return (
+    <button
+      type="button"
+      onClick={() => setMobileOpen(!mobileOpen)}
+      className={`md:hidden cursor-pointer rounded-md p-2 hover:bg-accent dark:hover:bg-[#09161f] transition-colors ${className ?? ""}`}
+      aria-label={mobileOpen ? "Close sidebar" : "Open sidebar"}
+    >
+      {mobileOpen ? <X size={22} /> : <Menu size={22} />}
+    </button>
+  );
+}
 
 const menuItems = [
   { title: "Dashboard", href: "/", icon: LayoutDashboard },
@@ -37,7 +80,7 @@ const menuItems = [
       { title: "View Posts", href: "/posts", icon: List },
     ],
   },
-  { title: "Categories", href: "/categories", icon: LayoutList },
+  { title: "Categories", href: "/categories", icon: Blocks },
   { title: "Events", href: "/events", icon: Events },
   { title: "Audit Logs", href: "/audit-logs", icon: ClipboardClock },
   { title: "Settings", href: "/settings", icon: Settings },
@@ -68,7 +111,6 @@ function SidebarContent({
         <h2 className={`text-xl text-slate-600 font-bold ${collapsed ? "hidden" : "block"}`}>Admin Panel</h2>
       </div>
 
-      {/* Nav items */}
       <nav className="space-y-2 flex-1">
         {menuItems.map((item) => {
           const Icon = item.icon;
@@ -149,15 +191,10 @@ function SidebarContent({
   );
 }
 
-type SidebarProps = {
-  collapsed: boolean;
-  onCollapsedChange: (val: boolean) => void;
-};
-
-export function Sidebar({ collapsed: desktopCollapsed, onCollapsedChange }: SidebarProps) {
+export function Sidebar() {
   const pathname = usePathname();
+  const { desktopCollapsed, setDesktopCollapsed, mobileOpen, setMobileOpen } = useSidebar();
   const [postsOpen, setPostsOpen] = useState(isPostsPath(pathname));
-  const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
     <>
@@ -169,7 +206,7 @@ export function Sidebar({ collapsed: desktopCollapsed, onCollapsedChange }: Side
           </div>
           <button
             type="button"
-            onClick={() => onCollapsedChange(!desktopCollapsed)}
+            onClick={() => setDesktopCollapsed(!desktopCollapsed)}
             className="rounded-md hover:bg-accent dark:hover:bg-[#09161f] cursor-pointer"
             aria-label={desktopCollapsed ? "Expand sidebar" : "Collapse sidebar"}
           >
@@ -187,37 +224,37 @@ export function Sidebar({ collapsed: desktopCollapsed, onCollapsedChange }: Side
         />
       </aside>
 
-      {/* Mobile sidebar */}
       <div className="md:hidden">
-        <div className="fixed left-4 top-4 z-50">
-          <button
-            type="button"
-            onClick={() => setMobileOpen(true)}
-            className="cursor-pointer rounded-md border bg-background p-2 shadow-sm"
-            aria-label="Open sidebar"
-          >
-            ☰
-          </button>
-        </div>
-
-        {mobileOpen && (
-          <div className="fixed inset-0 z-50">
-            <div className="absolute inset-0 bg-black/40" onClick={() => setMobileOpen(false)} />
-            <aside className="relative h-full w-[280px] border-r bg-background p-4 dark:bg-gray-950">
-              <div className="mb-8 flex items-center justify-between">
-                <h2 className="text-xl font-bold text-slate-600">Admin Panel</h2>
-                <button type="button" onClick={() => setMobileOpen(false)} className="cursor-pointer rounded-md p-2 hover:bg-accent dark:hover:bg-[#09161f]" aria-label="Close sidebar">✕</button>
-              </div>
-              <SidebarContent
-                collapsed={false}
-                onNavigate={() => setMobileOpen(false)}
-                pathname={pathname}
-                postsOpen={postsOpen}
-                setPostsOpen={setPostsOpen}
-              />
-            </aside>
+        <div
+          className={`fixed inset-0 z-40 bg-black/40 transition-opacity duration-300 ease-in-out ${
+            mobileOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+          }`}
+          onClick={() => setMobileOpen(false)}
+        />
+        <aside
+          className={`fixed left-0 top-0 z-50 h-full w-[280px] border-r bg-background p-4 dark:bg-gray-950 transition-transform duration-300 ease-in-out will-change-transform ${
+            mobileOpen ? "translate-x-0" : "-translate-x-full"
+          }`}
+        >
+          <div className="mb-8 flex items-center justify-between">
+            <h2 className="text-xl font-bold text-slate-600">Admin Panel</h2>
+            <button
+              type="button"
+              onClick={() => setMobileOpen(false)}
+              className="cursor-pointer rounded-md p-2 hover:bg-accent dark:hover:bg-[#09161f]"
+              aria-label="Close sidebar"
+            >
+              <X size={20} />
+            </button>
           </div>
-        )}
+          <SidebarContent
+            collapsed={false}
+            onNavigate={() => setMobileOpen(false)}
+            pathname={pathname}
+            postsOpen={postsOpen}
+            setPostsOpen={setPostsOpen}
+          />
+        </aside>
       </div>
     </>
   );

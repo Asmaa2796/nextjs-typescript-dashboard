@@ -15,11 +15,15 @@ import { Input } from "@/components/ui/input";
 import { Settings, UserCircle, LogOut } from "lucide-react";
 import Link from "next/link";
 import { signOut } from "@/app/actions/auth";
+import { SidebarTrigger } from "@/components/shared/sidebar";
 
 export function Navbar() {
   return (
     <header className="h-16 dark:bg-gray-950 border-b px-6 flex items-center justify-between gap-4">
-      <h1 className="font-semibold hidden sm:block text-slate-600">Admin Dashboard</h1>
+      <div className="flex items-center gap-3">
+        <SidebarTrigger />
+        <h1 className="font-semibold hidden sm:block text-slate-600">Admin Dashboard</h1>
+      </div>
 
       <div className="flex-1 flex items-center justify-center">
         <div className="relative w-full max-w-md">
@@ -63,8 +67,6 @@ export function Navbar() {
                 Profile
               </Link>
             </DropdownMenuItem>
-
-            {/* Sign out — form عشان تشتغل مع الـ server action */}
             <DropdownMenuItem>
               <form action={signOut} className="w-full">
                 <button
