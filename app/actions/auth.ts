@@ -4,7 +4,14 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/server";
 import { logAudit } from "@/lib/audit-log";
 
-export async function signIn(formData: FormData) {
+export type LoginState = {
+  error: string | null;
+};
+
+export async function signIn(
+  _: LoginState,
+  formData: FormData
+): Promise<LoginState> {
   const supabase = await createClient();
 
   const email = formData.get("email") as string;
@@ -24,7 +31,12 @@ export async function signIn(formData: FormData) {
       metadata: { error: error.message },
     });
 
-    throw new Error(error.message);
+    return {
+      error:
+        error.message === "Invalid login credentials"
+          ? "Invalid email or password"
+          : error.message,
+    };
   }
 
   await logAudit({
@@ -47,9 +59,7 @@ export async function signOut() {
 
   const { error } = await supabase.auth.signOut();
 
-  if (error) {
-    throw error;
-  }
+  if (error) throw error;
 
   await logAudit({
     action: "auth.logout",

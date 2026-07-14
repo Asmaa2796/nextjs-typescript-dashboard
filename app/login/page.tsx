@@ -1,39 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { useActionState } from "react";
 import { signIn } from "@/app/actions/auth";
-import { Button } from "@/components/ui/button";
+import { SubmitButton } from "@/components/submit-button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { LockIcon, MailIcon, Loader2Icon } from "lucide-react";
+import { LockIcon, MailIcon } from "lucide-react";
 
 export default function LoginPage() {
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
-
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-
-    setLoading(true);
-    setError(null);
-
-    const formData = new FormData(e.currentTarget);
-
-    try {
-      await signIn(formData);
-    } catch (err) {
-      const message =
-        err instanceof Error ? err.message : "Something went wrong";
-
-      setError(
-        message === "Invalid login credentials"
-          ? "Invalid email or password"
-          : message
-      );
-
-      setLoading(false);
-    }
-  }
+  const [state, formAction] = useActionState(signIn, {
+    error: null,
+  });
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
@@ -50,12 +27,12 @@ export default function LoginPage() {
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form action={formAction} className="space-y-4">
           <div className="space-y-1">
             <Label htmlFor="email">Email</Label>
 
             <div className="relative">
-              <MailIcon className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <MailIcon className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
 
               <Input
                 id="email"
@@ -64,7 +41,6 @@ export default function LoginPage() {
                 placeholder="admin@example.com"
                 className="h-10 pl-9"
                 required
-                disabled={loading}
               />
             </div>
           </div>
@@ -73,7 +49,7 @@ export default function LoginPage() {
             <Label htmlFor="password">Password</Label>
 
             <div className="relative">
-              <LockIcon className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <LockIcon className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
 
               <Input
                 id="password"
@@ -82,31 +58,17 @@ export default function LoginPage() {
                 placeholder="••••••••"
                 className="h-10 pl-9"
                 required
-                disabled={loading}
               />
             </div>
           </div>
 
-          {error && (
+          {state.error && (
             <div className="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-600">
-              {error}
+              {state.error}
             </div>
           )}
 
-          <Button
-            type="submit"
-            disabled={loading}
-            className="w-full cursor-pointer bg-orange-600 text-white hover:bg-orange-700"
-          >
-            {loading ? (
-              <>
-                <Loader2Icon className="mr-2 h-4 w-4 animate-spin" />
-                Signing in...
-              </>
-            ) : (
-              "Sign in"
-            )}
-          </Button>
+          <SubmitButton />
         </form>
       </div>
     </div>
