@@ -13,11 +13,11 @@ export default function LoginPage() {
   });
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="w-full max-w-md rounded-xl border bg-white p-8 shadow-sm">
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-950">
+      <div className="w-full max-w-md rounded-xl border bg-white dark:bg-[#09161f] p-8 shadow-sm">
         <div className="mb-8 text-center">
-          <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-full bg-orange-100">
-            <LockIcon className="h-5 w-5 text-orange-600" />
+          <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-full bg-sky-100 dark:bg-sky-500/15">
+            <LockIcon className="h-5 w-5 text-sky-600" />
           </div>
 
           <h1 className="text-2xl font-bold">Admin Login</h1>
@@ -29,7 +29,7 @@ export default function LoginPage() {
 
         <form action={formAction} className="space-y-4">
           <div className="space-y-1">
-            <Label htmlFor="email">Email</Label>
+            <Label htmlFor="email" className="mb-3">Email</Label>
 
             <div className="relative">
               <MailIcon className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -46,7 +46,7 @@ export default function LoginPage() {
           </div>
 
           <div className="space-y-1">
-            <Label htmlFor="password">Password</Label>
+            <Label htmlFor="password" className="mb-3">Password</Label>
 
             <div className="relative">
               <LockIcon className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
