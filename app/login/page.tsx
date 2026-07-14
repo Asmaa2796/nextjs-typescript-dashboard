@@ -13,47 +13,56 @@ export default function LoginPage() {
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+
     setLoading(true);
     setError(null);
 
     const formData = new FormData(e.currentTarget);
-    const result = await signIn(formData);
 
-    if (result?.error) {
-      setError(result.error === "Invalid login credentials"
-        ? "Invalid email or password"
-        : result.error
+    try {
+      await signIn(formData);
+    } catch (err) {
+      const message =
+        err instanceof Error ? err.message : "Something went wrong";
+
+      setError(
+        message === "Invalid login credentials"
+          ? "Invalid email or password"
+          : message
       );
+
       setLoading(false);
     }
   }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="w-full max-w-md bg-white rounded-xl shadow-sm border p-8">
-
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-orange-100 mb-4">
-            <LockIcon className="w-5 h-5 text-orange-600" />
+      <div className="w-full max-w-md rounded-xl border bg-white p-8 shadow-sm">
+        <div className="mb-8 text-center">
+          <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-full bg-orange-100">
+            <LockIcon className="h-5 w-5 text-orange-600" />
           </div>
+
           <h1 className="text-2xl font-bold">Admin Login</h1>
-          <p className="text-muted-foreground text-sm mt-1">
+
+          <p className="mt-1 text-sm text-muted-foreground">
             Sign in to access the dashboard
           </p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-
           <div className="space-y-1">
             <Label htmlFor="email">Email</Label>
+
             <div className="relative">
-              <MailIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+              <MailIcon className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+
               <Input
                 id="email"
                 name="email"
                 type="email"
                 placeholder="admin@example.com"
-                className="pl-9 h-10"
+                className="h-10 pl-9"
                 required
                 disabled={loading}
               />
@@ -62,14 +71,16 @@ export default function LoginPage() {
 
           <div className="space-y-1">
             <Label htmlFor="password">Password</Label>
+
             <div className="relative">
-              <LockIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+              <LockIcon className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+
               <Input
                 id="password"
                 name="password"
                 type="password"
                 placeholder="••••••••"
-                className="pl-9 h-10"
+                className="h-10 pl-9"
                 required
                 disabled={loading}
               />
@@ -77,7 +88,7 @@ export default function LoginPage() {
           </div>
 
           {error && (
-            <div className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-md px-3 py-2">
+            <div className="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-600">
               {error}
             </div>
           )}
@@ -85,18 +96,17 @@ export default function LoginPage() {
           <Button
             type="submit"
             disabled={loading}
-            className="w-full cursor-pointer bg-orange-600 hover:bg-orange-700 text-white"
+            className="w-full cursor-pointer bg-orange-600 text-white hover:bg-orange-700"
           >
             {loading ? (
               <>
-                <Loader2Icon className="w-4 h-4 animate-spin mr-2" />
+                <Loader2Icon className="mr-2 h-4 w-4 animate-spin" />
                 Signing in...
               </>
             ) : (
               "Sign in"
             )}
           </Button>
-
         </form>
       </div>
     </div>

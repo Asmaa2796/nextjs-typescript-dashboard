@@ -236,8 +236,8 @@ export function Sidebar() {
             mobileOpen ? "translate-x-0" : "-translate-x-full"
           }`}
         >
-          <div className="mb-8 flex items-center justify-between">
-            <h2 className="text-xl font-bold text-slate-600">Admin Panel</h2>
+          <div className="mb-8 flex items-center justify-end">
+            {/* <h2 className="text-xl font-bold text-slate-600">Admin Panel</h2> */}
             <button
               type="button"
               onClick={() => setMobileOpen(false)}
