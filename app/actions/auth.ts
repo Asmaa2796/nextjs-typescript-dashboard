@@ -24,7 +24,7 @@ export async function signIn(formData: FormData) {
       metadata: { error: error.message },
     });
 
-    return { error: error.message };
+    throw new Error(error.message);
   }
 
   await logAudit({
@@ -48,7 +48,7 @@ export async function signOut() {
   const { error } = await supabase.auth.signOut();
 
   if (error) {
-    return { error: error.message };
+    throw error;
   }
 
   await logAudit({
