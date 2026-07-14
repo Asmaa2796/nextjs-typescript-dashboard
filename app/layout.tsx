@@ -1,6 +1,7 @@
-import type { Metadata,Viewport } from "next";
+import type { Metadata, Viewport } from "next";
 import { Outfit, Geist_Mono } from "next/font/google";
 import { ThemeProvider } from "@/components/providers/theme-provider";
+import { ThemeColor } from "@/components/theme-color";
 import "./globals.css";
 import { Toaster } from "sonner";
 
@@ -17,21 +18,13 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "My Dashboard",
   description: "Admin Dashboard",
-   icons: {
+  icons: {
     icon: "/assets/dashboard.png",
   },
 };
+
 export const viewport: Viewport = {
-  themeColor: [
-    {
-      media: "(prefers-color-scheme: light)",
-      color: "#0084d2",
-    },
-    {
-      media: "(prefers-color-scheme: dark)",
-      color: "#09161f",
-    },
-  ],
+  themeColor: "#0084d2",
 };
 
 export default function RootLayout({
@@ -47,6 +40,7 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col">
         <ThemeProvider>
+          <ThemeColor />
           {children}
           <Toaster richColors position="top-right" />
         </ThemeProvider>
