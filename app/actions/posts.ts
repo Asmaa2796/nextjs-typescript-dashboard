@@ -1,11 +1,13 @@
 "use server";
 
-import { supabase } from "@/lib/supabase";
+import { createClient } from "@/lib/server";
 import { revalidatePath } from "next/cache";
 import { logAudit } from "@/lib/audit-log";
 
 // create post
 export async function createPost(formData: FormData) {
+  const supabase = await createClient();
+
   const title = formData.get("title") as string;
   const content = formData.get("content") as string;
   const sub_content = formData.get("sub_content") as string;
@@ -21,29 +23,43 @@ export async function createPost(formData: FormData) {
   if (mainImageFile && mainImageFile.size > 0) {
     const ext = mainImageFile.name.split(".").pop();
     const path = `main/${Date.now()}.${ext}`;
+
     const { error } = await supabase.storage
       .from("project-images")
       .upload(path, mainImageFile);
-    if (error) throw new Error("Failed to upload main image: " + error.message);
+
+    if (error) {
+      throw new Error("Failed to upload main image: " + error.message);
+    }
+
     const { data: urlData } = supabase.storage
       .from("project-images")
       .getPublicUrl(path);
+
     main_image = urlData.publicUrl;
   }
 
   // Upload sub images
   const sub_images: string[] = [];
+
   for (const file of subImageFiles) {
     if (file.size === 0) continue;
+
     const ext = file.name.split(".").pop();
     const path = `gallery/${Date.now()}-${Math.random()}.${ext}`;
+
     const { error } = await supabase.storage
       .from("project-images")
       .upload(path, file);
-    if (error) throw new Error("Failed to upload sub image: " + error.message);
+
+    if (error) {
+      throw new Error("Failed to upload sub image: " + error.message);
+    }
+
     const { data: urlData } = supabase.storage
       .from("project-images")
       .getPublicUrl(path);
+
     sub_images.push(urlData.publicUrl);
   }
 
@@ -54,7 +70,8 @@ export async function createPost(formData: FormData) {
     active,
     main_image,
     sub_images,
-    category_id: categoryId && categoryId !== "" ? Number(categoryId) : null,
+    category_id:
+      categoryId && categoryId !== "" ? Number(categoryId) : null,
   };
 
   if (categoryName && categoryName !== "") {
@@ -67,9 +84,13 @@ export async function createPost(formData: FormData) {
     .select()
     .single();
 
-  if (error?.message?.includes("does not exist") && insertPayload.category_name) {
+  if (
+    error?.message?.includes("does not exist") &&
+    insertPayload.category_name
+  ) {
     const fallbackPayload = { ...insertPayload };
     delete fallbackPayload.category_name;
+
     ({ data: newPost, error } = await supabase
       .from("posts")
       .insert(fallbackPayload)
@@ -78,25 +99,25 @@ export async function createPost(formData: FormData) {
   }
 
   if (error || !newPost) {
-    console.error("Error creating post in DB:", error);
-    throw new Error(error?.message || "Failed to create post row");
+    console.error(error);
+    throw new Error(error?.message || "Failed to create post");
   }
 
-  if (newPost && tagIds.length > 0) {
-    const postTagRows = tagIds
-      .filter((tagId) => tagId !== "")
-      .map((tagId) => ({
+  if (tagIds.length > 0) {
+    const rows = tagIds
+      .filter((id) => id !== "")
+      .map((id) => ({
         post_id: newPost.id,
-        tag_id: Number(tagId),
+        tag_id: Number(id),
       }));
 
-    if (postTagRows.length > 0) {
+    if (rows.length > 0) {
       const { error: tagsError } = await supabase
         .from("post_tags")
-        .insert(postTagRows);
+        .insert(rows);
 
       if (tagsError) {
-        console.error("Error linking tags to post:", tagsError);
+        console.error(tagsError);
       }
     }
   }
@@ -113,11 +134,17 @@ export async function createPost(formData: FormData) {
   });
 
   revalidatePath("/posts");
-  return { success: true, post_id: newPost.id };
+
+  return {
+    success: true,
+    post_id: newPost.id,
+  };
 }
 
 // update post
 export async function updatePost(formData: FormData) {
+  const supabase = await createClient();
+
   const id = formData.get("id") as string;
   const title = formData.get("title") as string;
   const content = formData.get("content") as string;
@@ -125,12 +152,15 @@ export async function updatePost(formData: FormData) {
   const active = formData.get("active") === "true";
   const mainImageFile = formData.get("main_image") as File | null;
   const subImageFiles = formData.getAll("sub_images") as File[];
-  const existingMainImage = formData.get("existing_main_image") as string;
-  const existingSubImages = formData.getAll("existing_sub_images") as string[];
+  const existingMainImage = formData.get(
+    "existing_main_image"
+  ) as string;
+  const existingSubImages = formData.getAll(
+    "existing_sub_images"
+  ) as string[];
   const categoryId = formData.get("category_id");
   const tagIds = formData.getAll("tag_ids");
 
-  // Fetch the "before" state so we can log a meaningful diff
   const { data: previousPost } = await supabase
     .from("posts")
     .select("title, active, category_id")
@@ -138,31 +168,46 @@ export async function updatePost(formData: FormData) {
     .single();
 
   let main_image = existingMainImage;
+
   if (mainImageFile && mainImageFile.size > 0) {
     const ext = mainImageFile.name.split(".").pop();
     const path = `main/${Date.now()}.${ext}`;
+
     const { error } = await supabase.storage
       .from("project-images")
       .upload(path, mainImageFile);
-    if (error) throw new Error("Failed to upload main image: " + error.message);
+
+    if (error) {
+      throw new Error("Failed to upload main image: " + error.message);
+    }
+
     const { data: urlData } = supabase.storage
       .from("project-images")
       .getPublicUrl(path);
+
     main_image = urlData.publicUrl;
   }
 
-  const sub_images: string[] = [...existingSubImages];
+  const sub_images = [...existingSubImages];
+
   for (const file of subImageFiles) {
     if (file.size === 0) continue;
+
     const ext = file.name.split(".").pop();
     const path = `gallery/${Date.now()}-${Math.random()}.${ext}`;
+
     const { error } = await supabase.storage
       .from("project-images")
       .upload(path, file);
-    if (error) throw new Error("Failed to upload sub image: " + error.message);
+
+    if (error) {
+      throw new Error("Failed to upload sub image: " + error.message);
+    }
+
     const { data: urlData } = supabase.storage
       .from("project-images")
       .getPublicUrl(path);
+
     sub_images.push(urlData.publicUrl);
   }
 
@@ -184,28 +229,27 @@ export async function updatePost(formData: FormData) {
     .update(updatePayload)
     .eq("id", id);
 
-  if (error) throw new Error(error.message);
+  if (error) {
+    throw new Error(error.message);
+  }
 
-  // Update tags
+  await supabase.from("post_tags").delete().eq("post_id", id);
+
   if (tagIds.length > 0) {
-    // Delete existing tags for this post
-    await supabase.from("post_tags").delete().eq("post_id", id);
-
-    // Insert new tags
-    const postTagRows = tagIds
-      .filter((tagId) => tagId !== "")
-      .map((tagId) => ({
+    const rows = tagIds
+      .filter((id) => id !== "")
+      .map((id) => ({
         post_id: id,
-        tag_id: Number(tagId),
+        tag_id: Number(id),
       }));
 
-    if (postTagRows.length > 0) {
+    if (rows.length > 0) {
       const { error: tagsError } = await supabase
         .from("post_tags")
-        .insert(postTagRows);
+        .insert(rows);
 
       if (tagsError) {
-        console.error("Error updating tags for post:", tagsError);
+        console.error(tagsError);
       }
     }
   }
@@ -219,7 +263,10 @@ export async function updatePost(formData: FormData) {
       after: {
         title,
         active,
-        category_id: updatePayload.category_id ?? previousPost?.category_id ?? null,
+        category_id:
+          updatePayload.category_id ??
+          previousPost?.category_id ??
+          null,
       },
     },
   });
@@ -230,23 +277,32 @@ export async function updatePost(formData: FormData) {
 
 // delete post
 export async function deletePost(formData: FormData) {
+  const supabase = await createClient();
+
   const id = formData.get("id") as string;
 
-  // Grab title before deleting, so the audit log is still readable afterwards
   const { data: postToDelete } = await supabase
     .from("posts")
     .select("title")
     .eq("id", id)
     .single();
 
-  const { error } = await supabase.from("posts").delete().eq("id", id);
-  if (error) throw new Error(error.message);
+  const { error } = await supabase
+    .from("posts")
+    .delete()
+    .eq("id", id);
+
+  if (error) {
+    throw new Error(error.message);
+  }
 
   await logAudit({
     action: "post.deleted",
     entityType: "post",
     entityId: id,
-    metadata: { title: postToDelete?.title ?? null },
+    metadata: {
+      title: postToDelete?.title ?? null,
+    },
   });
 
   revalidatePath("/posts");

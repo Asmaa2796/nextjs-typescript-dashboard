@@ -1,14 +1,19 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { supabase } from "@/lib/supabase";
+import { createClient } from "@/lib/server";
 import { logAudit } from "@/lib/audit-log";
 
 export async function signIn(formData: FormData) {
+  const supabase = await createClient();
+
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
 
-  const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email,
+    password,
+  });
 
   if (error) {
     await logAudit({
@@ -18,6 +23,7 @@ export async function signIn(formData: FormData) {
       actorId: null,
       metadata: { error: error.message },
     });
+
     return { error: error.message };
   }
 
@@ -33,11 +39,17 @@ export async function signIn(formData: FormData) {
 }
 
 export async function signOut() {
+  const supabase = await createClient();
+
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
-  await supabase.auth.signOut();
+  const { error } = await supabase.auth.signOut();
+
+  if (error) {
+    return { error: error.message };
+  }
 
   await logAudit({
     action: "auth.logout",
@@ -51,6 +63,11 @@ export async function signOut() {
 }
 
 export async function getUser() {
-  const { data: { user } } = await supabase.auth.getUser();
+  const supabase = await createClient();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
   return user;
 }

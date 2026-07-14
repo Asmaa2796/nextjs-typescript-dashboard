@@ -1,18 +1,20 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { supabase } from "@/lib/supabase";
+import { createClient } from "@/lib/server";
 
 // get categories
 export async function getCategories() {
+  const supabase = await createClient();
+
   const { data, error } = await supabase
     .from("categories_with_post_count")
     .select("*")
-    .order("name")
+    .order("name");
 
-  if (error) throw error
+  if (error) throw error;
 
-  return data
+  return data;
 }
 
 // reassign post to another category
@@ -20,14 +22,17 @@ export async function reassignAndKeyDeleteCategory(
   categoryIdToDelete: number,
   newCategoryId: number,
 ) {
+  const supabase = await createClient();
+
   let replacementCategoryName: string | null = null;
 
   if (newCategoryId > 0) {
-    const { data: replacementCategory, error: replacementCategoryError } = await supabase
-      .from("categories")
-      .select("name")
-      .eq("id", newCategoryId)
-      .single();
+    const { data: replacementCategory, error: replacementCategoryError } =
+      await supabase
+        .from("categories")
+        .select("name")
+        .eq("id", newCategoryId)
+        .single();
 
     if (replacementCategoryError) {
       console.error(replacementCategoryError);
